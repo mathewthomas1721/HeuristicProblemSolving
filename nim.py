@@ -35,3 +35,4 @@ for i in xrange(1000):
 	for j in xrange(42):
 		s += str(int((bs_moves[i, j]))) + " "
 	print s
+#comment
