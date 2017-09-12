@@ -34,4 +34,8 @@ for i in xrange(1000):
 	s = ""
 	for j in xrange(42):
 		s += str(int((bs_moves[i, j]))) + " "
+<<<<<<< HEAD
 	print s
+=======
+	print s
+>>>>>>> Paul
