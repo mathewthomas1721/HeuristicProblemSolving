@@ -130,3 +130,12 @@ fill_mat()
 	play_human()"""
 
 
+<<<<<<< HEAD
+=======
+for i in xrange(1000):
+	s = ""
+	for j in xrange(42):
+		s += str(int((bs_moves[i, j]))) + " "
+	print s
+#comment PAUL MATT
+>>>>>>> 1205b7a2aaac55eb5ac84fa6ae12217c17b9944f
