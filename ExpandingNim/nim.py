@@ -1,6 +1,8 @@
 import numpy as np 
+import sys
+from client import Client
 
-num_stones = 1000
+num_stones = 400
 num_resets = 4
 
 bs_moves = np.zeros((num_stones,45, num_resets + 1, num_resets + 1,2))
@@ -19,14 +21,18 @@ def populate(stones, curr_max, num_rs1, num_rs2):
 	if (curr_max < 45):
 		if (bs_moves[stones - curr_max - 1, curr_max - 2, num_rs2, num_rs1,0] == 0):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = curr_max
-		if ((curr_max < 45) and (bs_moves[stones - curr_max - 1, curr_max - 2, num_rs2, num_rs1 - 1,1] == 0)):
-				bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = -1 * curr_max #use reset
+		if ((num_rs1 > 0) and (bs_moves[stones - curr_max - 1, curr_max - 2, num_rs2, num_rs1 - 1,1] == 0)):
+			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = -1 * curr_max #use reset
 	#If in reset
 	for i in range (1,4):
-		if (bs_moves[stones - i - 1, curr_max - 3, num_rs2, num_rs1, 0] == 0):
+		changemax = 0
+		if (i == curr_max):
+			changemax = 1
+		if (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1, 0] == 0):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = i
-		if ((num_rs1 > 0) and (bs_moves[stones - i - 1, curr_max - 3, num_rs2, num_rs1 - 1, 1] == 0)):
+		if ((num_rs1 > 0) and (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1 - 1, 1] == 0)):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = -1 * i #use reset
+
 		
 def fill_mat():
 	for i in range(num_stones):
@@ -37,8 +43,8 @@ def fill_mat():
 					curr_max = j + 3
 					if (stones <= curr_max):
 						bs_moves[i, j, k, l,0] = stones
-					if (stones <= 3):
-						bs_moves[i, j, k, l,1] = stones
+						if (stones <= 3):
+							bs_moves[i, j, k, l,1] = stones
 					elif ((num_stones - i)):
 						populate(stones, curr_max, k, l)
 
@@ -66,8 +72,50 @@ def print_mat():
 		print(s)
 #comment PAUL
 
+class Server_Game:
+	def __init__(self,turnx):
+		#server_addr = ["172.16.183.135","9000"]
 
-class Game:
+		self.client = Client('BabySnake', (turnx == 0), ('172.16.183.135',9000))
+		self.stones = self.client.init_stones
+		self.num_rs1 = 4
+		self.num_rs2 = 4
+		self.curr_max = 3
+		self.isReset = 0
+		self.turn = turnx
+		self.fin = False
+
+	def make_move(self):
+
+		mv = get_move(self.stones, self.curr_max, self.num_rs1, self.num_rs2, self.isReset)
+		self.num_rs1 -= mv[1]
+		if (mv[1] == 1):
+			self.client.make_move(int(mv[0]), True)
+			self.num_rs1 -= 1
+		else:
+			self.client.make_move(int(mv[0]), False)
+		self.turn = 1
+
+	def get_move(self):
+		status = self.client.receive_move()
+		self.fin = status['finished']
+		self.stones = status['stones_left']
+		self.curr_max = status['current_max']
+		if (status['reset_used']):
+			self.isReset = 1
+			self.num_rs2 -= 1
+		else:
+			self.isReset = 0
+		self.turn = 0
+
+	def play(self):
+			while(not self.fin):
+				if (self.turn == 0):
+					self.make_move()
+				else:
+					self.get_move()
+
+class Human_Game:
 	def __init__(self):
 		self.stones = np.random.choice(25)
 		self.num_rs1 = 4
@@ -122,10 +170,16 @@ class Game:
 
 
 def play_human():
-	game = Game() 
+	game = Human_Game() 
 	game.play()
 
 fill_mat()
+
+turnx = int(sys.argv[1])
+print(turnx)
+game = Server_Game(turnx)
+game.play()
+
 """while (1):
 	play_human()"""
 
