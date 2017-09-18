@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from client import Client
 
-num_stones = 400
+num_stones = 1000
 num_resets = 4
 
 bs_moves = np.zeros((num_stones,45, num_resets + 1, num_resets + 1,2), dtype=np.int)
@@ -11,29 +11,24 @@ def populate(stones, curr_max, num_rs1, num_rs2):
 
 	bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2,0] = 0
 
-	bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2,1] = 0
 	#If not in reset
 	for i in range(1, curr_max):
 		if (bs_moves[stones - i - 1, curr_max - 3, num_rs2, num_rs1, 0] == 0):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = i
+			return
 		if ((num_rs1 > 0) and (bs_moves[stones - i - 1, curr_max - 3, num_rs2, num_rs1 - 1, 1] == 0)):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = -1 * i #use reset
+			return
 	if (curr_max < 45):
 		if (bs_moves[stones - curr_max - 1, curr_max - 2, num_rs2, num_rs1,0] == 0):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = curr_max
+			return
 		if ((num_rs1 > 0) and (bs_moves[stones - curr_max - 1, curr_max - 2, num_rs2, num_rs1 - 1,1] == 0)):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 0] = -1 * curr_max #use reset
-	#If in reset
-	for i in range (1,4):
-		changemax = 0
-		if (i == curr_max):
-			changemax = 1
-		if (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1, 0] == 0):
-			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = i
-		if ((num_rs1 > 0) and (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1 - 1, 1] == 0)):
-			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = -1 * i #use reset
+			return
 
-def populate_reset_only(stones, curr_max, num_rs1, num_rs2):
+
+def populate_reset_on(stones, curr_max, num_rs1, num_rs2):
 	bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2,1] = 0
 	for i in range (1,4):
 		changemax = 0
@@ -41,8 +36,10 @@ def populate_reset_only(stones, curr_max, num_rs1, num_rs2):
 			changemax = 1
 		if (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1, 0] == 0):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = i
+			return
 		if ((num_rs1 > 0) and (bs_moves[stones - i - 1, curr_max - 3 + changemax, num_rs2, num_rs1 - 1, 1] == 0)):
 			bs_moves[stones - 1, curr_max - 3, num_rs1, num_rs2, 1] = -1 * i #use reset
+			return
 
 
 		
@@ -58,9 +55,10 @@ def fill_mat():
 						if (stones <= 3):
 							bs_moves[i, j, k, l,1] = stones
 						else:
-							populate_reset_only(stones, curr_max, k, l)
+							populate_reset_on(stones, curr_max, k, l)
 					else:
 						populate(stones, curr_max, k, l)
+						populate_reset_on(stones, curr_max, k, l)
 
 def get_move(stones, curr_max, num_rs1, num_rs2, rs):
 	print(stones, curr_max, num_rs1, num_rs2, rs)
@@ -104,7 +102,6 @@ class Server_Game:
 
 		mv = get_move(self.stones, self.curr_max, self.num_rs1, self.num_rs2, self.isReset)
 		print(mv)
-		self.num_rs1 -= mv[1]
 		if (mv[0] == self.curr_max):
 			self.curr_max += 1
 		if (mv[1] == 1):
