@@ -56,7 +56,7 @@ def fill_mat():
 							bs_moves[i, j, k, l,1] = stones
 						else:
 							populate_reset_on(stones, curr_max, k, l)
-					else:
+					elif (i + 1 <= 1003 - ((j+3)*(j+2)/ 2)):
 						populate(stones, curr_max, k, l)
 						populate_reset_on(stones, curr_max, k, l)
 
@@ -192,11 +192,11 @@ def play_human():
 
 fill_mat()
 
-
+"""
 turnx = int(sys.argv[1])
 print(turnx)
 game = Server_Game(turnx)
-game.play()
+game.play()"""
 
 """while (1):
 	play_human()
