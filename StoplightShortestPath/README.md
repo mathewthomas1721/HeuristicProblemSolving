@@ -20,13 +20,13 @@ startNode endNode startTime endTime
 3. Traversing an edge that does not exist
 4. Traversing an edge that is not connected to the endNode of the previous traversal
 
-##Classes
-###Client Class
-####recv_stoplight()
+## Classes
+### Client Class
+#### recv_stoplight()
 Receives the stoplight file from the server.
-####send_resp()
+#### send_resp()
 Sends the generated moves to the server.
-####wrap_recv()
+#### wrap_recv()
 Wrapper function for recv_stoplight(), prints to stdout
-####wrap_send()
+#### wrap_send()
 Wrapper function for send_resp(), reads from stdin
