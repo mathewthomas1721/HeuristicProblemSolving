@@ -39,27 +39,56 @@ def populateEdges(fname):
 
 #ACTUAL INTERFACING
 def showMoves(entryname):
-	stats = [line.rstrip('\n').split(" ") for line in open(entryname)]
-	startTime = int(stats[0][0])
-	endTime = int(stats[1][0])
-	moves = []
-	for line in stats:
-		if len(line)>1:
-			line[0] = int(line[0][1:])
-			line[1] = int(line[1][1:])
-			moves.append(line)
-	clock = 0;
-	for move in moves:
-		color = edgecolors[move[0]][move[1]]
+	#print entryname
+	#stats = entryname.readlines()#[line.strip() for line in entryname]
+	#print stats
+	#startTime = int(stats[0][0])
+	#endTime = int(stats[1][0])
+	#print line
+	#moves = []
+	clock = 0
+	prevNode = -1
+	for line in entryname.splitlines():
+		move = line.split()
+		#print move
+		#line[0] = int(line[0][1:])
+		#line[1] = int(line[1][1:])
+		#moves.append(line)
+		
+		startNode = int(move[0][1:])
+		finNode = int(move[1][1:])
+	
+		color = edgecolors[startNode][finNode]
 		sumTime = np.sum(colors[color])
+		startTime = int(move[2])
+		endTime = int(move[3])
+		#print startNode,finNode,startTime,endTime
 		#print color, sumTime
-		moveTime = edgetime[move[0]][move[1]]
+		moveTime = edgetime[startNode][finNode]
 		currEdgeTime = clock%sumTime
-		if currEdgeTime + moveTime <=colors[color][0]:
-			clock = clock + moveTime
-		else :
-			print "ERROR, ILLEGAL TRAVERSAL" + str(move)
-	print "Total Traversal Time = " + str(clock)	
+		#print currEdgeTime
+		if startNode == prevNode or prevNode == -1:
+			if moveTime != 0:
+				if moveTime==(endTime-startTime) :
+					if ((currEdgeTime + moveTime) % sumTime) <= colors[color][0]:
+						clock = endTime
+						prevNode = finNode
+						print line
+					else :
+						print "\nERROR, ILLEGAL TRAVERSAL, OUTSIDE OF GREENTIME " + str(line) + "\n"
+						sys.exit()	
+				else :
+					print "\nERROR, MOVE TIMES DO NOT MATCH " + str(line) + " " + str(moveTime) + "\n"
+					sys.exit()
+			else :
+				print "\nERROR, EDGE DOES NOT EXIST " + str(line) + "\n"
+				sys.exit()
+		else:
+			print "\nERROR, TRAVERSAL NOT CONTINUOUS " + str(line) + "\n"
+			sys.exit()		
+
+	print "\nTotal Traversal Time = " + str(clock) + "\n"
+	sys.exit()
 
 #print moves
 

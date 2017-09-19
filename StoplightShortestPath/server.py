@@ -1,18 +1,37 @@
-#!/usr/bin/python           # This is server.py file
+#!/usr/bin/python
+import os          
 import sys
-import socket               # Import socket module
+import socket     
+import time          
 from ssp import populateEdges
 from ssp import showMoves
-s = socket.socket()         # Create a socket object
+s = socket.socket()         
 populateEdges(sys.argv[1])
-host = socket.gethostname() # Get local machine name
-port = 12345                # Reserve a port for your service.
-s.bind((host, port))        # Bind to the port
+host = socket.gethostname() 
+port = 12345                
+s.bind((host, port))  
 
-s.listen(5)                 # Now wait for client connection.
+f = open (sys.argv[1], "rb")
+l = f.read()
+
+s.listen(5)
+
 while True:
-   c, addr = s.accept()     # Establish connection with client.
-   print 'Got connection from', addr
-   c.send('Message from server')
-   showMoves(c.recv(1024))
+
+   #send stoplight
+   c, addr = s.accept()     
+   c.sendall(l)
+
+   #start timer
+   t0 = time.time()
+   moves = c.recv(1024)
+   #print moves
+   t1 = time.time()
+   total = t1-t0
+   #print total
+   if total>120:
+   		print "ERROR : OUT OF TIME"
+   else:		
+   		showMoves(moves)
+
    c.close()                # Close the connection
