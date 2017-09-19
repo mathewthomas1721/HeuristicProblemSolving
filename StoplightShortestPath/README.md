@@ -19,3 +19,14 @@ startNode endNode startTime endTime
 2. Listing a traversal as taking more/less time than is required
 3. Traversing an edge that does not exist
 4. Traversing an edge that is not connected to the endNode of the previous traversal
+
+##Classes
+###Client Class
+####recv_stoplight()
+Receives the stoplight file from the server.
+####send_resp()
+Sends the generated moves to the server.
+####wrap_recv()
+Wrapper function for recv_stoplight(), prints to stdout
+####wrap_send()
+Wrapper function for send_resp(), reads from stdin
