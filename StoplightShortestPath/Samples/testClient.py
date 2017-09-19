@@ -1,4 +1,4 @@
-from smartclient import Client
+from client import Client
 
 client = Client('172.16.32.76',12345)
 

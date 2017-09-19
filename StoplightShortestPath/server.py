@@ -32,6 +32,6 @@ while True:
    if total>120:
    		print "ERROR, OUT OF TIME : " + str(total)
    else:		
-   		showMoves(moves)
+   		showMoves(moves, int(sys.argv[2][1:]), int(sys.argv[3][1:]))
 
    c.close()                # Close the connection
