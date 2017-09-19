@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import os          
 import sys
 import socket     
@@ -22,15 +21,15 @@ while True:
    c, addr = s.accept()     
    c.sendall(l)
 
-   #start timer
-   t0 = time.time()
+   
+   t0 = time.time() #start timer
    moves = c.recv(1024)
-   #print moves
-   t1 = time.time()
+   t1 = time.time() #end timer
+
    total = t1-t0
-   #print total
+   
    if total>120:
-   		print "ERROR : OUT OF TIME"
+   		print "ERROR, OUT OF TIME : " + str(total)
    else:		
    		showMoves(moves)
 

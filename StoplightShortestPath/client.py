@@ -1,37 +1,25 @@
-#Socket client example in python
- 
-import socket   #for sockets
-import sys  #for exit
+import socket   
+import sys 
 import struct
 import time
  
-#create an INET, STREAMing socket
+
 
 class Client :
     def __init__(self,server_address,port):
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         except socket.error:
-            print 'Failed to create socket'
+            print 'SOCKET ERROR'
             sys.exit()
              
-        print 'Socket Created'
-         
         self.server_address = server_address;
         self.port = port;
-         
-        '''try:
-            remote_ip = socket.gethostname()
-         
-        except socket.gaierror:
-            #could not resolve
-            print 'Hostname could not be resolved. Exiting'
-            sys.exit()'''
          
         
         self.socket.connect((self.server_address , self.port))
      
-        print 'Socket Connected to ' + self.server_address
+        print 'Connected! ' + self.server_address
     
     def close(self):
         self.socket.close()
@@ -39,17 +27,13 @@ class Client :
     def __del__(self):
         self.close()       
      
-    def recv_stoplight(self,timeout=2):
-        #make socket non blocking
+    def recv_stoplight(self,timeout=2): #Function to make sure entire stoplight file is received using a timeout
         the_socket = self.socket
         the_socket.setblocking(0)
-         
-        #total data partwise in an array
         total_data=[];
         data='';
-         
-        #beginning time
         begin=time.time()
+
         while 1:
             #if you got some data, then break after timeout
             if total_data and time.time()-begin > timeout:
@@ -75,15 +59,13 @@ class Client :
         #join all parts to make final string
         return ''.join(total_data)
  
-    def send_resp(self, moves):
-        #moves in the form of a string
-        #print moves
+    def send_resp(self, moves): #send moves in the form of a string
         self.socket.send(moves)
 
-    def wrap_recv():
+    def wrap_recv(): #wrapper for recv_stoplight
         print recv_stoplight()
             
-    def wrap_send():
+    def wrap_send(): #wrapper for send_resp
         moves = '-1'.join(iter(raw_input, sentinel))
         send_resp(moves)        
 
