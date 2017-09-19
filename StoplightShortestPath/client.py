@@ -1,3 +1,4 @@
+#SSP Client
 import socket   
 import sys 
 import struct

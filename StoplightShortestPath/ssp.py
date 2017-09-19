@@ -1,3 +1,4 @@
+#SSP Check
 import sys
 import numpy as np
 edgecolors =  np.zeros((201,201),dtype=int)
