@@ -32,6 +32,15 @@ If you're not using Python, you have two options :
 
 ## Classes
 ### Client Class
+To initialize a new Client object, use the following statement :
+
+	client = Client(serv_addr,port)
+
+where, serv_addr is the IP address of the server
+	   port is the relevant port
+
+Default port value is 12345	
+
 #### recv_stoplight()
 Receives the stoplight file from the server.
 #### send_resp()
