@@ -36,8 +36,9 @@ To initialize a new Client object, use the following statement :
 
 	client = Client(serv_addr,port)
 
-where, serv_addr is the IP address of the server
-	   port is the relevant port
+serv_addr is the IP address of the server
+
+port is the relevant port
 
 Default port value is 12345	
 
