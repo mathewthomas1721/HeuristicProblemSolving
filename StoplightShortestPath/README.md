@@ -7,6 +7,7 @@ The player is presented with a directed graph with each edge having a fixed trav
 2. Listing a traversal as taking more/less time than is required
 3. Traversing an edge that does not exist
 4. Traversing an edge that is not connected to the endNode of the previous traversal
+5. Starting a traversal before the current clock time
 
 ## Input and Output
 The server will provide the player with a file containing all the edges in the graph. The file will also contain specifications for each particular color. The format of the file would be as follows : 
