@@ -70,7 +70,7 @@ def showMoves(entryname,start,finish):
 			if moveTime != 0:
 				if moveTime==(endTime-startTime) :
 					if startTime >= clock:
-						if ((currEdgeTime + moveTime) % sumTime) <= colors[color][0]:
+						if (currEdgeTime + moveTime <= colors[color][0] or colors[color][1] == 0:
 							clock = endTime
 							prevNode = finNode
 							print line
