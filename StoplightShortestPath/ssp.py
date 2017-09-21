@@ -4,7 +4,8 @@ import numpy as np
 edgecolors =  np.zeros((201,201),dtype=int)
 edgetime = np.zeros((201,201),dtype=int)
 colors = np.zeros((10,2),dtype=int)
-
+edgecolors.fill(-1)
+#print colors
 def populateEdges(fname):
 
 	lines1 = [line.rstrip('\n').split(" ") for line in open(fname)]
@@ -28,11 +29,20 @@ def populateEdges(fname):
 	for line in lines:
 		if len(line) == 4 :
 			edgecolors[line[0]][line[1]] = line[2]
+			edgecolors[line[1]][line[0]] = line[2]
 			edgetime[line[0]][line[1]] = line[3]
+			edgetime[line[1]][line[0]] = line[3]
 
 		else :
 			colors[line[0]][0] = line[1]
 			colors[line[0]][1] = line[2]
+
+	for i in range(201):
+		for j in range(201):
+			if edgecolors[i][j] != edgecolors[j][i] and edgecolors[i][j]!=-1 and edgecolors[j][i]!=-1 :
+				print "EDGE COLOR MISMATCH " + str(i) + " " + str(j) + " " + str(edgecolors[i][j]) + " " + str(edgecolors[j][i])
+			if edgetime[i][j] != edgetime[i][j]:
+				print "EDGE TIME MISMATCH "  + str(i) + " " + str(j) + " " + str(edgetime[i][j]) + " " + str(edgetime[j][i])
 
 #ACTUAL INTERFACING
 def showMoves(entryname,start,finish):
@@ -55,17 +65,21 @@ def showMoves(entryname,start,finish):
 		startTime = int(move[2])
 		endTime = int(move[3])
 		moveTime = edgetime[startNode][finNode]
-		currEdgeTime = clock%sumTime
+		currEdgeTime = startTime%sumTime
 		if startNode == prevNode or prevNode == -1:
 			if moveTime != 0:
 				if moveTime==(endTime-startTime) :
-					if ((currEdgeTime + moveTime) % sumTime) <= colors[color][0]:
-						clock = endTime
-						prevNode = finNode
-						print line
-					else :
-						print "\nERROR, ILLEGAL TRAVERSAL, OUTSIDE OF GREENTIME " + str(line) + "\n"
-						sys.exit()	
+					if startTime >= clock:
+						if ((currEdgeTime + moveTime) % sumTime) <= colors[color][0]:
+							clock = endTime
+							prevNode = finNode
+							print line
+						else :
+							print "\nERROR, ILLEGAL TRAVERSAL, OUTSIDE OF GREENTIME " + str(line) + "\n"
+							sys.exit()
+					else : 
+						print "\nERROR, TRAVERSAL STARTS BEFORE CURRENT CLOCK TIME " + str(line) + "CURRENT TIME =  " + str(clocktime) + "\n"
+						sys.exit()			
 				else :
 					print "\nERROR, MOVE TIMES DO NOT MATCH " + str(line) + " " + str(moveTime) + "\n"
 					sys.exit()
@@ -84,3 +98,4 @@ def showMoves(entryname,start,finish):
 	print "\nTotal Traversal Time = " + str(clock) + "\n"
 	sys.exit()
 
+populateEdges('stoplight')
