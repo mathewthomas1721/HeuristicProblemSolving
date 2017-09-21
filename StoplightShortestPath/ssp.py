@@ -37,12 +37,12 @@ def populateEdges(fname):
 			colors[line[0]][0] = line[1]
 			colors[line[0]][1] = line[2]
 
-	for i in range(201):
+	'''for i in range(201):
 		for j in range(201):
-			if edgecolors[i][j] != edgecolors[j][i] and edgecolors[i][j]!=-1 and edgecolors[j][i]!=-1 :
+			if edgecolors[i][j] != edgecolors[j][i] and edgecolors[i][j]!=-1: #and edgecolors[j][i]!=-1 :
 				print "EDGE COLOR MISMATCH " + str(i) + " " + str(j) + " " + str(edgecolors[i][j]) + " " + str(edgecolors[j][i])
 			if edgetime[i][j] != edgetime[i][j]:
-				print "EDGE TIME MISMATCH "  + str(i) + " " + str(j) + " " + str(edgetime[i][j]) + " " + str(edgetime[j][i])
+				print "EDGE TIME MISMATCH "  + str(i) + " " + str(j) + " " + str(edgetime[i][j]) + " " + str(edgetime[j][i])'''
 
 #ACTUAL INTERFACING
 def showMoves(entryname,start,finish):
@@ -97,5 +97,5 @@ def showMoves(entryname,start,finish):
 	print "\nPath from " + str(firstNode) + " to " + str(lastNode) + "\n"
 	print "\nTotal Traversal Time = " + str(clock) + "\n"
 	sys.exit()
-
+populateEdges('stoplight')
 
