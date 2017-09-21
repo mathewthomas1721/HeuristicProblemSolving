@@ -13,13 +13,15 @@ s.bind((host, port))
 
 f = open (sys.argv[1], "rb")
 l = f.read()
+l = sys.argv[2] + " " + sys.argv[3] + "\n" + l
 
 s.listen(5)
 
 while True:
 
    #send stoplight
-   c, addr = s.accept()     
+   c, addr = s.accept() 
+
    c.sendall(l)
 
    
