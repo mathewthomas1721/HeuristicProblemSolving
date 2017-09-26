@@ -65,9 +65,10 @@ def showMoves(entryname,start,finish):
 		startTime = int(move[2])
 		endTime = int(move[3])
 		moveTime = edgetime[startNode][finNode]
-		currEdgeTime = startTime%sumTime
-		if startNode == prevNode or prevNode == -1:
-			if moveTime != 0:
+		
+		if moveTime != 0:
+			currEdgeTime = startTime%sumTime
+			if startNode == prevNode or prevNode == -1:
 				if moveTime==(endTime-startTime) :
 					if startTime >= clock:
 						if currEdgeTime + moveTime <= colors[color][0] or colors[color][1] == 0:
@@ -84,11 +85,12 @@ def showMoves(entryname,start,finish):
 					print "\nERROR, MOVE TIMES DO NOT MATCH " + str(line) + " " + str(moveTime) + "\n"
 					sys.exit()
 			else :
-				print "\nERROR, EDGE DOES NOT EXIST " + str(line) + "\n"
+				print "\nERROR, TRAVERSAL NOT CONTINUOUS " + str(line) + "\n"
 				sys.exit()
-		else:
-			print "\nERROR, TRAVERSAL NOT CONTINUOUS " + str(line) + "\n"
+		else :
+			print "\nERROR, EDGE DOES NOT EXIST " + str(line) + "\n"
 			sys.exit()
+			
 	
 	lastNode = finNode
 	if(lastNode!=finish):
