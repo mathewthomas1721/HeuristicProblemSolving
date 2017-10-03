@@ -61,11 +61,15 @@ while(1):
     	newBoard = alpha_beta_search(oldBoard,0)
     	#print oldBoard.board
     	#print newBoard.board
+        diff = -1
     	for i in range(len(newBoard.board)):
     		if newBoard.board[i] != oldBoard.board[i]:
-    			diff = newBoard.board[i]
+                    if diff == -1:
+                        diff = newBoard.board[i]
+                        ind = i-30
+                #break
 
-    	ind = newBoard.board.index(diff)-30
+    	#ind = ind-30
     	print "OUR MOVE = "
     	print "Added: (" + str(diff) + "," + str(ind) + ")\n" 
     	print "NEW BOARD = \n" + str(newBoard.board) + "\n"
@@ -79,15 +83,17 @@ while(1):
     	newBoard = alpha_beta_search(oldBoard,1)
     	#print oldBoard.board
     	#print newBoard.board
+        diff = -1
     	for i in range(len(newBoard.board)):
     		if newBoard.board[i] != oldBoard.board[i]:
-    			diff = oldBoard.board[i]
-
-    	ind = newBoard.board.index(diff)-30
+                    if diff == -1:
+                        diff = oldBoard.board[i]
+                        ind = i-30
+    	#ind = ind-30
     	print "OUR MOVE = "
     	print "Removed: (" + str(diff) + "," + str(ind) + ")" 
     	print "NEW BOARD = \n" + str(newBoard.board) + "\n"
-        s.sendall('{}'.format(diff))
+        s.sendall('{}'.format(ind))
     	#print " can't do it yet "#"Removed:" + str(choice)
         #s.sendall('{}'.format(choice))
 

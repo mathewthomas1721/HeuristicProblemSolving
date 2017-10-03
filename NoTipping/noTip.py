@@ -26,9 +26,9 @@ def score(boardCurr, player): # Defines a score for each state
 	score = 0.0
 	allmoves = 0
 	if player == 0:
-		weights = boardCurr.myBlocks
+		weights = list(boardCurr.myBlocks)
 	else :
-		weights = boardCurr.oppBlocks	
+		weights = list(boardCurr.oppBlocks)	
 	#size = len(boardCurr.board)/2
 	for weight in weights:
 		if weight != 0:
@@ -40,7 +40,6 @@ def score(boardCurr, player): # Defines a score for each state
 					if boardCurr.tip():
 						#print "TIP"
 						score = score + 1
-					#else : 
 						#score = score -1
 					allmoves = allmoves + 1		
 					boardCurr.remove(player,weight,pos)
@@ -106,7 +105,7 @@ def childStatesRemove(boardCurr,player): # Populates a list containing all valid
 	children = []
 	
 	for pos in range(-30,31):
-		weight = boardCurr.lookup(pos)
+		weight = int(boardCurr.lookup(pos))
 		if weight != 0 :
 			
 			boardCurr.remove(player, weight, pos)
@@ -125,9 +124,9 @@ def alpha_beta_search(boardCurr,addrem):
     
     alpha = -float("inf")
     beta = float("inf")
-    print score(boardCurr,0)
+    #print score(boardCurr,0)
     bscore, bestBoard = alpha_beta_max_value(boardCurr,alpha,beta,0,0,addrem)
-    print bscore
+    #print bscore
    
     return bestBoard
 
@@ -137,7 +136,6 @@ def alpha_beta_max_value(boardCurr,alpha,beta,level,player,addrem):
     if(level >= LEVEL):
 
     	if len(boardCurr.blocksleft(player)) != 0:
-    	
         	return score(boardCurr, player), boardCurr
         else :
         	return scoreRem(boardCurr, player), boardCurr
@@ -158,6 +156,9 @@ def alpha_beta_max_value(boardCurr,alpha,beta,level,player,addrem):
     for i in a:
     	#if not np.array_equal(i.board,boardCurr.board):
     	#	print i.board
+    	if len(i.blocksleft(player)) == 0:
+    		addrem = 1	
+
         val, c = alpha_beta_min_value(i, alpha, beta, level + 1, p1, addrem)
 
         v = max( v, val)
@@ -166,7 +167,7 @@ def alpha_beta_max_value(boardCurr,alpha,beta,level,player,addrem):
             return v, boardCurr
         alpha = max( alpha, v )
         newboard = i
-
+    	#print "TRIED = " + str(set(newboard.board) - set(boardCurr.board))
     return v, newboard
 
 #The Alpha Beta Min Value
@@ -194,7 +195,8 @@ def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
     	p1 = 0
 
     for j in a:
-    	
+    	if len(j.blocksleft(player)) == 0:
+    		addrem = 1	
         val, c = alpha_beta_max_value(j,alpha,beta,level + 1, p1, addrem)
 
         v = min( v, val)
@@ -203,6 +205,7 @@ def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
             return v, boardCurr
         beta = min( beta, v )
         newboard = j
+       # print "TRIED = " + str(set(newboard.board) - set(boardCurr.board))
 
 	return v, newboard 
 			
