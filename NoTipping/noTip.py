@@ -25,7 +25,7 @@ LEVEL = 1
 def score(boardCurr, player): # Defines a score for each state
 	score = 0.0
 	allmoves = 0
-	if player == 1:
+	if player == 0:
 		weights = boardCurr.myBlocks
 	else :
 		weights = boardCurr.oppBlocks	
@@ -34,6 +34,8 @@ def score(boardCurr, player): # Defines a score for each state
 		if weight != 0:
 			for pos in range(-30,31):
 				if boardCurr.lookup(pos) == 0 :
+					#print str(pos) + " is free "
+					#print "PLACING : PLAYER = " + str(player) + " WEIGHT = " + str(weight) + " POS = " + str(pos) + "\n"
 					boardCurr.place(player, weight, pos)
 					if boardCurr.tip():
 						#print "TIP"
@@ -48,7 +50,29 @@ def score(boardCurr, player): # Defines a score for each state
 	#	return 1.5 #FAILURE				
 	return score/allmoves
 
-		
+def scoreRem(boardCurr, player): # Defines a score for each state
+	score = 0.0
+	allmoves = 0
+	for pos in range(-30,31):
+		if boardCurr.lookup(pos) != 0 :
+			weight = boardCurr.board[pos]
+			boardCurr.remove(player,weight,pos)
+			if boardCurr.tip():
+				#print "TIP"
+				score = score + 1
+			#else : 
+				#score = score -1
+			allmoves = allmoves + 1	
+			#print str(pos) + " is free "
+			#print "PLACING : PLAYER = " + str(player) + " WEIGHT = " + str(weight) + " POS = " + str(pos) + "\n"
+			boardCurr.place(player, weight, pos)
+				
+			
+	#if score > 0:				
+	#	print score/allmoves
+	#if allmoves = 0 : 
+	#	return 1.5 #FAILURE				
+	return score/allmoves		
 	
 def childStatesAdd(boardCurr, player): # Populates a list containing all valid moves FOR ADDING WEIGHTS - OPTIMIZE WITH JUST MOVES
 	children = []
@@ -62,7 +86,7 @@ def childStatesAdd(boardCurr, player): # Populates a list containing all valid m
 		if weight != 0:
 			for pos in range(-30,31):
 				if boardCurr.lookup(pos) == 0 :
-					
+					#print "PLACING : PLAYER = " + str(player) + " WEIGHT = " + str(weight) + " POS = " + str(pos) + "\n"
 					boardCurr.place(player, weight, pos)
 		
 					if not boardCurr.tip():
@@ -71,7 +95,7 @@ def childStatesAdd(boardCurr, player): # Populates a list containing all valid m
 						children.append(x)
 
 					boardCurr.remove(player, weight, pos)
-	children.reverse()		
+	#children.reverse()		
 	return children	
 # alpha -> Best already explored option along path to the root for maximizer
 # beta -> Best already explored option along path to the root for minimizer
@@ -95,21 +119,25 @@ def childStatesRemove(boardCurr,player): # Populates a list containing all valid
 	return children	
 
 def alpha_beta_search(boardCurr,addrem):
-    #print board
+    
     alpha = -float("inf")
     beta = float("inf")
     print score(boardCurr,0)
     bscore, bestBoard = alpha_beta_max_value(boardCurr,alpha,beta,0,0,addrem)
     print bscore
-    #print bestBoard.board
+   
     return bestBoard
 
 #The Alpha Beta Max Value
 def alpha_beta_max_value(boardCurr,alpha,beta,level,player,addrem):
 
     if(level >= LEVEL):
+
+    	if len(boardCurr.blocksleft(player)) != 0:
     	
-        return score(boardCurr, player), boardCurr
+        	return score(boardCurr, player), boardCurr
+        else :
+        	return scoreRem(boardCurr, player), boardCurr
 
     v = -float("inf")
     if addrem == 0:
@@ -141,12 +169,16 @@ def alpha_beta_max_value(boardCurr,alpha,beta,level,player,addrem):
 #The Alpha Beta Min Value
 def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
 
-    if(1):
-    	#print "LEVEL REACHED MIN"
-        return score(boardCurr, player), boardCurr
+    if(level >= LEVEL):
+
+    	if len(boardCurr.blocksleft(player)) != 0:
+    	
+        	return score(boardCurr, player), boardCurr
+        else :
+        	return scoreRem(boardCurr, player), boardCurr
 
     v = float("inf")
-    #print "CALL FROM MIN"
+
     if addrem == 0:
     	a = childStatesAdd(boardCurr, player)
     else :
@@ -160,8 +192,7 @@ def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
     	p1 = 0
 
     for j in a:
-    	#if not np.array_equal(j.board,boardCurr.board):
-    	#	print j.board
+    	
         val, c = alpha_beta_max_value(j,alpha,beta,level + 1, p1, addrem)
 
         v = min( v, val)
@@ -173,17 +204,3 @@ def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
 
 	return v, newboard 
 			
-#b = Board(25)
-#weights = list(xrange(1,26))
-
-# HAVE TO FIGURE OUT THE WEIGHTS THAT THE OTHER PLAYER HAS - DONE ALREADY
-
-#x = alpha_beta_search(b).board
-#print x
-#for i in range(len(x)):
-#	if x[i] > 0:
-#		print i
-#print weights
-#listof = childStatesAdd(b,weights)
-#for item in listof:
-#	print item[1]

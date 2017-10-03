@@ -35,12 +35,12 @@ class Board():
 		if (self.lookup(pos) == 0 and blocks[block-1] != 0):
 			blocks[block - 1] = 0
 			self.boardSet(pos, block)
-		'''else:
+		else:
 			print "ERROR. Cannot place block "+ str(block) + " at position " + str(pos)
 			if blocks[block-1] == 0 :
 				print "Block ERROR " + str(block)
 			else :
-			    print "Pos Error " + str(pos)  '''
+			    print "Pos Error " + str(pos)  
 
 	def remove(self, player, block, pos):
 		if player == 0:
@@ -50,12 +50,12 @@ class Board():
 		if (self.lookup(pos) != 0 and blocks[block-1] == 0):
 			blocks[block - 1] = block
 			self.boardUnSet(pos, block)
-		'''else:
+		else:
 			print "ERROR. Cannot remove block " + str(block) + " from position " + str(pos)
 			if blocks[block-1] == 0 :
 				print "Block ERROR " + str(block)
 			else :
-			    print "Pos Error " + str(pos)'''  
+			    print "Pos Error " + str(pos)  
 
 
 

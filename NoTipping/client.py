@@ -46,7 +46,7 @@ while(1):
 
     for i in range(len(oldBoard.board)):
     		if board[i] != oldBoard.board[i]:
-    			diffr = newBoard.board[i]
+    			diffr = board[i]
     #oldBoard.oppBlocks[diffr-1] = 0			
     oldBoard.board = board  
     #print ol
