@@ -1,7 +1,7 @@
 from board import Board
 import numpy as np
 import copy
-LEVEL = 1
+LEVEL = 2
 # How do we choose an optimum move?
 #
 # What is it dependent on? 
@@ -51,12 +51,15 @@ def score(boardCurr, player): # Defines a score for each state
 	return score/allmoves
 
 def scoreRem(boardCurr, player): # Defines a score for each state
+	#print "SCORE REM CALLED"
 	score = 0.0
 	allmoves = 0
 	for pos in range(-30,31):
 		if boardCurr.lookup(pos) != 0 :
-			weight = boardCurr.board[pos]
+			weight = int(boardCurr.lookup(pos))
 			boardCurr.remove(player,weight,pos)
+			#print weight 
+			#print "REMOVED"
 			if boardCurr.tip():
 				#print "TIP"
 				score = score + 1
@@ -172,7 +175,6 @@ def alpha_beta_min_value(boardCurr,alpha,beta,level,player,addrem):
     if(level >= LEVEL):
 
     	if len(boardCurr.blocksleft(player)) != 0:
-    	
         	return score(boardCurr, player), boardCurr
         else :
         	return scoreRem(boardCurr, player), boardCurr
