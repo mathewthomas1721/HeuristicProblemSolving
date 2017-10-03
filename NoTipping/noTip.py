@@ -98,7 +98,7 @@ def childStatesAdd(boardCurr, player): # Populates a list containing all valid m
 						children.append(x)
 
 					boardCurr.remove(player, weight, pos)
-	#children.reverse()		
+	children.reverse()		
 	return children	
 # alpha -> Best already explored option along path to the root for maximizer
 # beta -> Best already explored option along path to the root for minimizer
