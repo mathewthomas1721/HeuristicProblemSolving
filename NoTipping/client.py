@@ -65,7 +65,7 @@ while(1):
     	for i in range(len(newBoard.board)):
     		if newBoard.board[i] != oldBoard.board[i]:
                     if diff == -1:
-                        diff = newBoard.board[i]
+                        diff = int(newBoard.board[i])
                         ind = i-30
                 #break
 
@@ -87,7 +87,7 @@ while(1):
     	for i in range(len(newBoard.board)):
     		if newBoard.board[i] != oldBoard.board[i]:
                     if diff == -1:
-                        diff = oldBoard.board[i]
+                        diff = int(oldBoard.board[i])
                         ind = i-30
     	#ind = ind-30
     	print "OUR MOVE = "

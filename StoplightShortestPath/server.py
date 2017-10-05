@@ -7,7 +7,7 @@ from ssp import populateEdges
 from ssp import showMoves
 s = socket.socket()         
 populateEdges(sys.argv[1])
-host = socket.gethostname() 
+host = '192.168.86.27'
 port = 12345                
 s.bind((host, port))  
 
@@ -26,7 +26,7 @@ while True:
 
    
    t0 = time.time() #start timer
-   moves = c.recv(1024)
+   moves = c.recv(8192)
    t1 = time.time() #end timer
 
    total = t1-t0

@@ -1,6 +1,6 @@
 from client import Client
 
-client = Client('172.16.214.0',12345)
+client = Client('192.168.0.31',12345)
 
 #print "recvstop"
 print client.recv_stoplight()

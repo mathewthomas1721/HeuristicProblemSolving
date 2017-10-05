@@ -74,7 +74,7 @@ def showMoves(entryname,start,finish):
 						if currEdgeTime + moveTime <= colors[color][0] or colors[color][1] == 0:
 							clock = endTime
 							prevNode = finNode
-							print line
+							print "\n" + line
 						else :
 							print "\nERROR, ILLEGAL TRAVERSAL, OUTSIDE OF GREENTIME " + str(line) + "\n"
 							sys.exit()
@@ -99,5 +99,5 @@ def showMoves(entryname,start,finish):
 	print "\nPath from " + str(firstNode) + " to " + str(lastNode) + "\n"
 	print "\nTotal Traversal Time = " + str(clock) + "\n"
 	sys.exit()
-populateEdges('stoplight')
+#populateEdges('stoplight')
 

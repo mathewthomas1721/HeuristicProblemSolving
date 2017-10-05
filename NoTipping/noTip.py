@@ -42,7 +42,7 @@ def score(boardCurr, player): # Defines a score for each state
 						score = score + 1
 						#score = score -1
 					allmoves = allmoves + 1		
-					boardCurr.remove(player,weight,pos)
+					boardCurr.remove(player,pos)
 	#if score > 0:				
 	#	print score/allmoves
 	#if allmoves = 0 : 
@@ -56,7 +56,7 @@ def scoreRem(boardCurr, player): # Defines a score for each state
 	for pos in range(-30,31):
 		if boardCurr.lookup(pos) != 0 :
 			weight = int(boardCurr.lookup(pos))
-			boardCurr.remove(player,weight,pos)
+			boardCurr.remove(player,pos)
 			#print weight 
 			#print "REMOVED"
 			if boardCurr.tip():
@@ -96,7 +96,7 @@ def childStatesAdd(boardCurr, player): # Populates a list containing all valid m
 						x = copy.deepcopy(boardCurr)
 						children.append(x)
 
-					boardCurr.remove(player, weight, pos)
+					boardCurr.remove(player, pos)
 	children.reverse()		
 	return children	
 # alpha -> Best already explored option along path to the root for maximizer
@@ -108,7 +108,7 @@ def childStatesRemove(boardCurr,player): # Populates a list containing all valid
 		weight = int(boardCurr.lookup(pos))
 		if weight != 0 :
 			
-			boardCurr.remove(player, weight, pos)
+			boardCurr.remove(player, pos)
 
 			if not boardCurr.tip():
 
