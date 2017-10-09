@@ -54,8 +54,9 @@ def populateGraph(filename):
 
 def edge_in_all(paths, cost, v1, v2):
 	for p in paths:
+		parsed = parsePathOld(p)
 		if getCost(p) <= cost + 1:
-			if not (v1 in p and v2 in p):
+			if not (v1 in parsed and v2 in parsed):
 				return False
 	return True
 
@@ -129,13 +130,14 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (dist < 0 ):
 			dist = 0
 		factor = 1.0 + np.sqrt(dist)
-		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] + max_Penalty(Dpaths, graphMat, v2, end)
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2]
 		if (edge_in_all(paths, cost, v1, v2)):
-			penalty *= 2
+			penalty = penalty * 5
+		penalty += max_Penalty(Dpaths, graphMat, v2, end)
+		print "(" + str(v1) + ", " + str(v2) + "): " + str(penalty)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
-	print max_penalty
 	return move
 
 
