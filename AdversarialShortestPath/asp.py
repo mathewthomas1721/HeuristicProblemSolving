@@ -42,16 +42,22 @@ def populateGraph(filename):
 	lines = lines[3:]
 
 	g = defaultdict(list)
-    #g_weights = defaultdict(list)
+
 	for line in lines:
 		graph[float(line[0]), float(line[1])] = 1
 		graph[float(line[1]), float(line[0])] = 1
 		g[int(line[0])].append((1,int(line[1])))
 		g[int(line[1])].append((1,int(line[0])))
-		#h[int(line[0])].append((1,int(line[1])))
-		#h[int(line[1])].append((1,int(line[0])))
+
 
 	return start,end,g, #h
+
+def edge_in_all(paths, cost, v1, v2):
+	for p in paths:
+		if getCost(p) <= cost + 1:
+			if not (v1 in p and v2 in p):
+				return False
+	return True
 
 def increase_edge(v1, v2, Dpaths):
 	dist1 = Dpaths[v1][0]
@@ -68,17 +74,45 @@ def increase_edge(v1, v2, Dpaths):
 def get_move(Dpaths, graphMat, start, end):
 	path, dist = parsePath(start, Dpaths)
 	cost = float('inf')
-	for p in AllPathsN(graphMat, end, start, dist, Dpaths):
+	for p in AllPathsN(graphMat, end, start, dist + 1, Dpaths):
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
-	return path[1]
+	return (path[0], path[1])
+
+def max_Penalty(Dpaths, graphMat, start, end):
+	path, distance = parsePath(start, Dpaths)
+	cost = float('inf')
+	for p in AllPathsN(graphMat, end, start, distance, Dpaths):
+		c = getCost(p)
+		if (c < cost):
+			path = parsePathOld(p)
+			cost = c
+	max_penalty = -1
+	move = (-1,-1)
+	for i in range(1,len(path)):
+		v1 = path[i - 1]
+		v2 = path[i]
+		dist1 = Dpaths[v1][0]
+		dist2 = Dpaths[v2][0]
+		dist = min(dist1, dist2)
+		if (dist < 0 ):
+			dist = 0
+		factor = 1.0 + np.sqrt(dist)
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] + max_Penalty(Dpaths, graphMat, v2, end)
+		if penalty > max_penalty:
+			max_penalty = penalty
+			move = (v1,v2)
+	if max_penalty < 0:
+		return 0
+	return max_penalty
 
 def get_A_move(Dpaths, graphMat, start, end):
 	path, distance = parsePath(start, Dpaths)
 	cost = float('inf')
-	for p in AllPathsN(graphMat, end, start, distance, Dpaths):
+	paths = AllPathsN(graphMat, end, start, distance, Dpaths)
+	for p in paths:
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
@@ -95,10 +129,13 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (dist < 0 ):
 			dist = 0
 		factor = 1.0 + np.sqrt(dist)
-		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2]
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] + max_Penalty(Dpaths, graphMat, v2, end)
+		if (edge_in_all(paths, cost, v1, v2)):
+			penalty *= 2
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
+	print max_penalty
 	return move
 
 
@@ -109,7 +146,7 @@ def game(filename):
 	total_cost = 0
 	for p in AllPathsN(graphMat, end, start, Dpaths[start][0], Dpaths):
 		print parsePathOld(p)
-	move = get_move(Dpaths, graphMat, start, end)
+	move = get_move(Dpaths, graphMat, start, end)[1]
 	total_cost += graph[current_v][move]
 	print "Player moves from vertex " + str(current_v) + " to vertex " + str(move) + " and pays "  + str(graph[current_v][move]) + ". Total cost: " + str(total_cost) + "\n"
 	current_v = move
@@ -117,7 +154,7 @@ def game(filename):
 		a_move = get_A_move(Dpaths, graphMat, current_v, end)
 		fac = increase_edge(a_move[0], a_move[1], Dpaths)
 		print "Adversary increases edge " + str(a_move) + " by a factor of " + str(fac) + ". New Cost: " + str(graph[a_move[0], a_move[1]]) + "\n"
-		move = get_move(Dpaths, graphMat, current_v, end)
+		move = get_move(Dpaths, graphMat, current_v, end)[1]
 		total_cost += graph[current_v][move]
 		print "Player moves from vertex " + str(current_v) + " to vertex " + str(move) + " and pays "  + str(graph[current_v][move]) + ". Total cost: " + str(total_cost) + "\n"
 		current_v = move
