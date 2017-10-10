@@ -14,7 +14,7 @@ def get_args():
                         help='IP address of the game server')
     parser.add_argument('--port', default=8080, type=int,
                         help='Port of the game server')
-    parser.add_argument('--name', default='Adversary',
+    parser.add_argument('--name', default='BabySnakes',
                         help='Name of the bot')
     return parser.parse_args()
 
@@ -30,7 +30,7 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-    client = Client(args.ip, args.port, args.name, 1)
+    client = Client(sys.argv[1], sys.arv[2], sys.argv[3], 1)
     game = client.get_game()
     start,end,graphMat = asp.populateGraph(game)
     Dpaths = dijkstra.dijkstra(graphMat,end)

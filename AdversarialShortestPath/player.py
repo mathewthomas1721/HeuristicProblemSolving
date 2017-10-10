@@ -7,15 +7,15 @@ import dijkstra
 from client import Client
 
 
-def get_args():
+'''def get_args():
     parser = argparse.ArgumentParser("Adversarial Client for the game")
     parser.add_argument('--ip', default='127.0.0.1',
                         help='IP address of the game server')
     parser.add_argument('--port', default=8080, type=int,
                         help='Port of the game server')
-    parser.add_argument('--name', default='Player',
+    parser.add_argument('--name', default='BabySnakes',
                         help='Name of the bot')
-    return parser.parse_args()
+    return parser.parse_args()'''
 
 
 '''def next_edge_to_move():
@@ -24,8 +24,8 @@ def get_args():
 
 
 if __name__ == "__main__":
-    args = get_args()
-    client = Client(args.ip, args.port, args.name, 0)
+    #args = get_args()
+    client = Client(sys.argv[1], sys.arv[2], sys.argv[3], 0)
     game = client.get_game()
     start,end,graphMat = asp.populateGraph(game)
     Dpaths = dijkstra.dijkstra(graphMat,end)
