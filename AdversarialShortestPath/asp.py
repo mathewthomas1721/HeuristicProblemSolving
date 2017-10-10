@@ -6,6 +6,9 @@ from dijkstra import *
 graph = np.zeros((1000,1000))
 graph.fill(-1)
 
+def updateGraph (v1,v2,val):
+	graph[v1][v2] = val
+
 def parsePath(node, Dpaths):
 	pathList = [node]
 	cost = -1
@@ -35,22 +38,18 @@ def getCost(path):
 	return cost
 
 
-def populateGraph(filename):
-	lines = [line.rstrip('\n').split(" ") for line in open(filename)]
-	start = int(lines[0][2])
-	end = int(lines[1][2])
-	lines = lines[3:]
-
+def populateGraph(game):
+	
+	adjlist = game['graph']
+	start = int(game['start_node'])
+	end = int(game['end_node'])
 	g = defaultdict(list)
-
-	for line in lines:
-		graph[float(line[0]), float(line[1])] = 1
-		graph[float(line[1]), float(line[0])] = 1
-		g[int(line[0])].append((1,int(line[1])))
-		g[int(line[1])].append((1,int(line[0])))
-
-
-	return start,end,g, #h
+	for key in adjlist:
+		for node in adjlist[key]:
+			graph[int(key),int(node)] = 1
+			g[int(key)].append((1,int(node)))
+			
+	return start,end,g
 
 def edge_in_all(paths, cost, v1, v2):
 	for p in paths:
@@ -80,6 +79,7 @@ def get_move(Dpaths, graphMat, start, end):
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
+
 	return (path[0], path[1])
 
 def max_Penalty(Dpaths, graphMat, start, end):
@@ -118,7 +118,7 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
-	print path
+	#print path
 	max_penalty = -1
 	move = (-1,-1)
 	for i in range(1,len(path)):
@@ -134,10 +134,11 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (edge_in_all(paths, cost, v1, v2)):
 			penalty = penalty * 5
 		penalty += max_Penalty(Dpaths, graphMat, v2, end)
-		print "(" + str(v1) + ", " + str(v2) + "): " + str(penalty)
+		#print "(" + str(v1) + ", " + str(v2) + "): " + str(penalty)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
+	increase_edge(move[0], move[1], Dpaths)	
 	return move
 
 
@@ -160,24 +161,4 @@ def game(filename):
 		total_cost += graph[current_v][move]
 		print "Player moves from vertex " + str(current_v) + " to vertex " + str(move) + " and pays "  + str(graph[current_v][move]) + ". Total cost: " + str(total_cost) + "\n"
 		current_v = move
-
-
-
-
-
-filename = sys.argv[1]
-game(filename)
-"""start,end,graphMat = populateGraph(filename)
-
-
-dijkstraDistMat = np.zeros((1000,1000),dtype = [('cost','i4'),('nxt','i4')])
-dijkstraDistMat['cost'] = -1
-dijkstraDistMat['nxt'] = -1
-Dpaths = dijkstra(graphMat,end)
-path, cost = parsePath(start, Dpaths)
-print path, cost
-for p in AllPathsN(graphMat, end, start, cost, Dpaths):
-	print str(parsePathOld(p)) + " cost: " + str(getCost(p))  + "\n"
-
-	"""
 
