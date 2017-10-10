@@ -8,6 +8,8 @@ graph.fill(-1)
 
 def updateGraph (v1,v2,val):
 	graph[v1][v2] = val
+	graph[v2][v1] = val
+
 
 def parsePath(node, Dpaths):
 	pathList = [node]
@@ -74,18 +76,31 @@ def increase_edge(v1, v2, Dpaths):
 def get_move(Dpaths, graphMat, start, end):
 	path, dist = parsePath(start, Dpaths)
 	cost = float('inf')
-	for p in AllPathsN(graphMat, end, start, dist + 1, Dpaths):
+	paths = AllPathsN(graphMat, end, start, dist + 1, Dpaths)
+	for p1 in paths:
+		print parsePathOld(p1)
+	for p in paths:
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
+	paths2 = AllPathsN(graphMat, end, path[1], dist - 1, Dpaths)
+	numpaths = len(paths2)
+	for p in paths:
+		if (getCost(p) < cost + 1.0):
+			parsed = parsePathOld(p)
+			paths2 = AllPathsN(graphMat, end, parsed[1], dist - 1, Dpaths)
+			if (len(paths2) > numpaths):
+				numpaths = len(numpaths)
+				path  = parsed
 
 	return (path[0], path[1])
 
 def max_Penalty(Dpaths, graphMat, start, end):
 	path, distance = parsePath(start, Dpaths)
 	cost = float('inf')
-	for p in AllPathsN(graphMat, end, start, distance, Dpaths):
+	paths = AllPathsN(graphMat, end, start, distance, Dpaths)
+	for p in paths:
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
@@ -101,7 +116,10 @@ def max_Penalty(Dpaths, graphMat, start, end):
 		if (dist < 0 ):
 			dist = 0
 		factor = 1.0 + np.sqrt(dist)
-		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] + max_Penalty(Dpaths, graphMat, v2, end)
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2]
+		if (edge_in_all(paths, cost, v1, v2)):
+			penalty = penalty * 5
+		penalty += max_Penalty(Dpaths, graphMat, v2, end)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
@@ -118,7 +136,6 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
-	#print path
 	max_penalty = -1
 	move = (-1,-1)
 	for i in range(1,len(path)):
@@ -134,7 +151,6 @@ def get_A_move(Dpaths, graphMat, start, end):
 		if (edge_in_all(paths, cost, v1, v2)):
 			penalty = penalty * 5
 		penalty += max_Penalty(Dpaths, graphMat, v2, end)
-		#print "(" + str(v1) + ", " + str(v2) + "): " + str(penalty)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
