@@ -25,7 +25,7 @@ from client import Client
 
 if __name__ == "__main__":
     #args = get_args()
-    client = Client(sys.argv[1], sys.arv[2], sys.argv[3], 0)
+    client = Client(sys.argv[1], int(sys.argv[2]), sys.argv[3], 0)
     game = client.get_game()
     start,end,graphMat = asp.populateGraph(game)
     Dpaths = dijkstra.dijkstra(graphMat,end)
