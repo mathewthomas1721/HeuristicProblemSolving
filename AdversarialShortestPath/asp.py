@@ -77,10 +77,10 @@ def get_move(Dpaths, graphMat, start, end):
 	path, dist = parsePath(start, Dpaths)
 	cost = float('inf')
 	paths = AllPathsN(graphMat, end, start, dist + 1, Dpaths)
-	for p1 in paths:
-		print parsePathOld(p1)
 	for p in paths:
+
 		c = getCost(p)
+		print parsePathOld(p), c
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
@@ -91,7 +91,7 @@ def get_move(Dpaths, graphMat, start, end):
 			parsed = parsePathOld(p)
 			paths2 = AllPathsN(graphMat, end, parsed[1], dist - 1, Dpaths)
 			if (len(paths2) > numpaths):
-				numpaths = len(numpaths)
+				numpaths = len(paths2)
 				path  = parsed
 
 	return (path[0], path[1])

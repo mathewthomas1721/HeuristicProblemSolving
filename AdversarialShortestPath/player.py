@@ -3,6 +3,7 @@ from __future__ import print_function
 import argparse
 import random
 import asp
+import sys
 import dijkstra
 from client import Client
 
@@ -41,4 +42,5 @@ if __name__ == "__main__":
         if adversaries_move['done']:
             break
         start = int(node2)    
-        asp.updateGraph(int(adversaries_move['edge'][0]), int(adversaries_move['edge'][0]), int(adversaries_move['new_cost']))
+        #print (int(adversaries_move['edge'][0]), int(adversaries_move['edge'][0]), int(adversaries_move['new_cost']))
+        asp.updateGraph(int(adversaries_move['edge'][0]), int(adversaries_move['edge'][1]), int(adversaries_move['new_cost']))
