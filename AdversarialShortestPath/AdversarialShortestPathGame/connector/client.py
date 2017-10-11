@@ -30,11 +30,24 @@ class Client:
         else:
             return input
 
+    def receive_huge(self):
+        all_data = ''
+        timeout = self.socket.gettimeout()
+        while True:
+            try:
+                packet = self.socket.recv(1024)
+            except socket.timeout:
+                break
+            all_data += packet
+            self.socket.settimeout(0.5)
+        self.socket.settimeout(timeout)
+        return Client.byteify(json.loads(all_data))
+
     def receive_data(self, size=1024):
         return Client.byteify(json.loads(self.socket.recv(size)))
 
     def get_game(self):
-        return self.receive_data(100000)
+        return self.receive_huge()
 
     def send_info(self, name, player_type):
         self.send_data({

@@ -3,6 +3,7 @@ from __future__ import print_function
 import random
 import math
 import argparse
+import sys
 import asp
 import dijkstra
 from client import Client
@@ -29,13 +30,13 @@ from client import Client
 
 
 if __name__ == "__main__":
-    args = get_args()
+    #args = get_args()
     client = Client(sys.argv[1], int(sys.argv[2]), sys.argv[3], 1)
     game = client.get_game()
     start,end,graphMat = asp.populateGraph(game)
     Dpaths = dijkstra.dijkstra(graphMat,end)
 
-    players_move = client.receive_data()
+    players_move = client.receive_huge()
     print("Player currently at " + str(players_move['position']))
     done = players_move['done']
 

@@ -37,7 +37,7 @@ if __name__ == "__main__":
         if update['done']:
             break
         
-        adversaries_move = client.receive_data()
+        adversaries_move = client.receive_huge()
         print("Edge affected = " + str(adversaries_move['edge']) + " to " + str(adversaries_move['new_cost']))
         if adversaries_move['done']:
             break
