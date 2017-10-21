@@ -1,11 +1,11 @@
 # Compiled source #
 ###################
+*.pyc
 *.com
 *.class
 *.dll
 *.exe
 *.o
-*.pyc
 *.so
 
 # Packages #
