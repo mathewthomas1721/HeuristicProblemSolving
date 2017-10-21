@@ -8,8 +8,6 @@ graph.fill(-1)
 
 def updateGraph (v1,v2,val):
 	graph[v1][v2] = val
-	graph[v2][v1] = val
-
 
 def parsePath(node, Dpaths):
 	pathList = [node]
@@ -74,33 +72,20 @@ def increase_edge(v1, v2, Dpaths):
 
 
 def get_move(Dpaths, graphMat, start, end):
-	path, dist = parsePath(start, Dpaths) # get the path and the distance to the end node, from the start node
-	cost = float('inf') # assign a cost of infinity
-	paths = AllPathsN(graphMat, end, start, dist + 1, Dpaths) # get all paths with a maximum distance of dist+1
-	for p in paths:
-
-		c = getCost(p) # get the cost of the current path
-		print parsePathOld(p), c
-		if (c < cost): 	# if the cost less than the current min cost, set path to that
+	path, dist = parsePath(start, Dpaths)
+	cost = float('inf')
+	for p in AllPathsN(graphMat, end, start, dist + 1, Dpaths):
+		c = getCost(p)
+		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
-	paths2 = AllPathsN(graphMat, end, path[1], dist - 1, Dpaths) # find all paths from the second node in path to end
-	numpaths = len(paths2) # number of paths from second node in path to end, distance less than dist-1
-	for p in paths:
-		if (getCost(p) < cost + 1.0): # find the paths with the least cost
-			parsed = parsePathOld(p) # parse that path
-			paths2 = AllPathsN(graphMat, end, parsed[1], dist - 1, Dpaths) # find the paths with least cost between second node and end
-			if (len(paths2) > numpaths): # if there are  more options along this path, choose it
-				numpaths = len(paths2)
-				path  = parsed
 
 	return (path[0], path[1])
 
 def max_Penalty(Dpaths, graphMat, start, end):
 	path, distance = parsePath(start, Dpaths)
 	cost = float('inf')
-	paths = AllPathsN(graphMat, end, start, distance, Dpaths)
-	for p in paths:
+	for p in AllPathsN(graphMat, end, start, distance, Dpaths):
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
@@ -116,10 +101,7 @@ def max_Penalty(Dpaths, graphMat, start, end):
 		if (dist < 0 ):
 			dist = 0
 		factor = 1.0 + np.sqrt(dist)
-		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2]
-		if (edge_in_all(paths, cost, v1, v2)):
-			penalty = penalty * 5
-		penalty += max_Penalty(Dpaths, graphMat, v2, end)
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] + max_Penalty(Dpaths, graphMat, v2, end)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
@@ -128,33 +110,35 @@ def max_Penalty(Dpaths, graphMat, start, end):
 	return max_penalty
 
 def get_A_move(Dpaths, graphMat, start, end):
-	path, distance = parsePath(start, Dpaths) # get the path and the distance to the end node, from the start node
+	path, distance = parsePath(start, Dpaths)
 	cost = float('inf')
-	paths = AllPathsN(graphMat, end, start, distance, Dpaths) # find all paths from start to end, with the min length
-	for p in paths: # find path with least cost
+	paths = AllPathsN(graphMat, end, start, distance, Dpaths)
+	for p in paths:
 		c = getCost(p)
 		if (c < cost):
 			path = parsePathOld(p)
 			cost = c
+	#print path
 	max_penalty = -1
 	move = (-1,-1)
-	for i in range(1,len(path)): # parsing through each edge in the path
+	for i in range(1,len(path)):
 		v1 = path[i - 1]
 		v2 = path[i]
-		dist1 = Dpaths[v1][0] # find the distance from each vertex to end
+		dist1 = Dpaths[v1][0]
 		dist2 = Dpaths[v2][0]
-		dist = min(dist1, dist2) # take the minimum
+		dist = min(dist1, dist2)
 		if (dist < 0 ):
 			dist = 0
-		factor = 1.0 + np.sqrt(dist) # calculate the factor
-		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2] # create a penalty factor, weighted by how far the person is from the edge currently
-		if (edge_in_all(paths, cost, v1, v2)): # if the edge is in all the paths, even better
+		factor = 1.0 + np.sqrt(dist)
+		penalty = graph[v1][v2] * factor ** (distance - dist) - graph[v1][v2]
+		if (edge_in_all(paths, cost, v1, v2)):
 			penalty = penalty * 5
-		penalty += max_Penalty(Dpaths, graphMat, v2, end) # add the max penalty that can be incurred from v2 to end
+		penalty += max_Penalty(Dpaths, graphMat, v2, end)
+		#print "(" + str(v1) + ", " + str(v2) + "): " + str(penalty)
 		if penalty > max_penalty:
 			max_penalty = penalty
 			move = (v1,v2)
-	increase_edge(move[0], move[1], Dpaths)	# increase the edge that has the max penalty value
+	increase_edge(move[0], move[1], Dpaths)	
 	return move
 
 

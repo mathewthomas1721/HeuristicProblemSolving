@@ -66,12 +66,12 @@ def showMoves(entryname,start,finish):
 		endTime = int(move[3])
 		moveTime = edgetime[startNode][finNode]
 		
-		if moveTime != 0:
+		if moveTime != 0: # checks if the edge exists
 			currEdgeTime = startTime%sumTime
-			if startNode == prevNode or prevNode == -1:
-				if moveTime==(endTime-startTime) :
-					if startTime >= clock:
-						if currEdgeTime + moveTime <= colors[color][0] or colors[color][1] == 0:
+			if startNode == prevNode or prevNode == -1: # checks if the traversal is continuous
+				if moveTime==(endTime-startTime) : # checks if the move times match
+					if startTime >= clock: # checks if the traversal starts before the current clock time
+						if currEdgeTime + moveTime <= colors[color][0] or colors[color][1] == 0: # checks if the traversal occurs during greentime
 							clock = endTime
 							prevNode = finNode
 							print "\n" + line
