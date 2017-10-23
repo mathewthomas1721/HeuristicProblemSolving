@@ -8,6 +8,7 @@ import hunter
 
 host = "localhost"
 port = int(sys.argv[1])
+strat = int(sys.argv[2])
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect((host, port))
@@ -42,14 +43,14 @@ while True:
         tosend = "BabySnakes" + str(port)
     else:
         data = line.split(" ")
-        print len(data)
+        #print len(data)
         if isHunter:
 
             #[gameNum] [tickNum] [wall type to add] [wall index to delete] [wall index to delete] [wall index to delete] ...
-            hunter.hunter(data)
-            x = random.randint(0,3)
-            print "X = " + str(x)
-            tosend = data[1] + " " + data[2] + " " + str(3)
+            move = hunter.hunter(data,strat)
+            #x = random.randint(0,3)
+            #print "X = " + str(x)s
+            tosend = data[1] + " " + data[2] + " " + move
         else:
 
             #[gameNum] [tickNum] [x movement] [y movement]
