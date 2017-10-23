@@ -1,0 +1,23 @@
+Hunter
+Check if when we build a wall, both prey and hunter are on same side
+
+prey
+move away from hunter
+move to center of area we're enclosed
+predict path of hunter, before and after one bounce
+
+
+find the region on the same side of all walls as the prey, this is the area
+available to the prey, we want to minimize it
+delete walls that won't affect it at all, and also add walls that will
+restrict it
+
+check if hunter is in same region as prey, if so ,add walls, if not, delete
+walls
+
+DELETE WALLS THAT DONT MATTER ALWAYS
+
+No point in creating a wall if in less than N timesteps, the prey cant get
+to that wall
+
+Calculate regions for each wall created, put in lookup table
