@@ -8,7 +8,8 @@ predict path of hunter, before and after one bounce
 
 
 find the region on the same side of all walls as the prey, this is the area
-available to the prey, we want to minimize it
+available to the prey, we want to minimize it - DONE
+
 delete walls that won't affect it at all, and also add walls that will
 restrict it
 

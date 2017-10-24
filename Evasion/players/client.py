@@ -58,5 +58,5 @@ while True:
             tosend = data[1] + " " + data[2] + " " + str(0) + " " + str(0)
 
     if tosend is not None:
-        print "sending: " + tosend
+        #print "sending: " + tosend
         sock.sendall(tosend + "\n")
