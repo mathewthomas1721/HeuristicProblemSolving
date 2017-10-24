@@ -338,6 +338,53 @@ def strat4(game):
 
     return str(newWall) + " " + str(delWalls)
 
+def strat5(game):
+    global minArea
+    if minArea == -1:
+        minArea = len(findRestrictedArea(game.preyXPos,game.preyYPos,game.wallEqns))
+    #print minArea
+    bestWall = 0
+    bestWallEqn = 0
+    delWalls = ""
+
+    for i in range(4):
+        wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
+        #print str(i) + " " + str(wallEqn)
+        dist1 = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)
+        dist2 = math.hypot(game.preyXPos - game.hunterXPos, game.preyYPos - game.hunterYPos)
+        if (dist1 < game.wallPlacementDelay/2) and sameSide(game.hunterXPos, game.hunterXPos, game.preyXPos, game.preyYPos, wallEqn): #and movingToward(game):
+            xPos = game.hunterXPos + game.hunterXVel
+            yPos = game.hunterYPos + game.hunterYVel
+            if sameSide(xPos, yPos, game.preyXPos, game.preyYPos, wallEqn):
+                #print "CONDITIONS SATSIFIED"
+                x = list(game.wallEqns)
+                x.append(wallEqn)
+                # ISSUE HERE
+                area = len(findRestrictedArea(game.preyXPos,game.preyYPos,x))
+                if area<minArea:
+                    minArea = area
+                    print str(area) + " " +str(i)
+                    bestWall = i+1
+                    bestWallEqn = wallEqn
+    newWall = bestWall
+    newWallEqn = bestWallEqn
+
+
+
+    if len(game.walls) >= game.maxWalls-1:
+        distances = []
+        i = 0
+        for wall in game.walls :
+            dist = distanceToWall(game.preyXPos,game.preyYPos,wall) + distanceToWall(game.hunterXPos,game.hunterYPos,wall) * (1/game.walls.index(wall))
+            distances.append((i,dist))
+            i = i+1
+        distances.sort(key=lambda tup: tup[1])
+        #print distances
+        delWalls = delWalls + str(distances[len(distances)-1][0])
+
+
+    return str(newWall) + " " + str(delWalls)
+
 def preyStrat(game):
     '''x = list(game.wallEqns)
     x.append([0,1,-300])
@@ -352,8 +399,9 @@ def preyStrat(game):
             yMov = wall[1]
             xMov = wall[0]'''
 
-
-    if game.preyXPos > 150 :
+    xMov = -game.hunterYVel
+    yMov = game.hunterXVel
+    '''if game.preyXPos > 150 :
         xMov = - random.randint(0,1)
     else :
         xMov = random.randint(0,1)
@@ -361,7 +409,7 @@ def preyStrat(game):
     if game.preyYPos > 150 :
         yMov = - random.randint(0,1)
     else :
-        yMov = random.randint(0,1)
+        yMov = random.randint(0,1)'''
 
     return str(xMov) + " " + str(yMov)
 

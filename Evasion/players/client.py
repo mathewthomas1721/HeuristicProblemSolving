@@ -46,10 +46,9 @@ while True:
         #print len(data)
         if isHunter:
 
-            #[gameNum] [tickNum] [wall type to add] [wall index to delete] [wall index to delete] [wall index to delete] ...
+            
             move = hunter.hunter(data,strat)
-            #x = random.randint(0,3)
-            #print "X = " + str(x)s
+
             tosend = data[1] + " " + data[2] + " " + move
         else:
 
