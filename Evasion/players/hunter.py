@@ -398,9 +398,17 @@ def preyStrat(game):
             maxDist = dist
             yMov = wall[1]
             xMov = wall[0]'''
-
-    xMov = -game.hunterYVel
-    yMov = game.hunterXVel
+    slope = game.hunterYVel/game.hunterXVel
+    eq1 = [slope, -1, -slope*game.hunterXPos + game.hunterYPos]
+    perpdist = distanceToWallEqn(game.preyXPos,game.preyYPos,eq1)
+    travelTime = perpdist*2
+    distpoint = math.hypot(game.preyXPos - game.hunterXPos, game.preyYPos - game.hunterYPos)
+    if abs(distpoint-travelTime)<=4:
+        xMov = 0
+        yMov = 0
+    else :
+        xMov = -game.hunterYVel
+        yMov = game.hunterXVel
     '''if game.preyXPos > 150 :
         xMov = - random.randint(0,1)
     else :
