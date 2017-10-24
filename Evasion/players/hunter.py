@@ -222,11 +222,16 @@ def strat1(game):
     #print len(findRestrictedArea(game.preyXPos,game.preyYPos,game.wallEqns))
     if movingToward(game):
         newWall = random.randint(1,4)
+        newWallEqn = lineEqn(game.hunterXPos,game.hunterYPos,newWall-1)
+        xPos = game.hunterXPos + game.hunterXVel
+        yPos = game.hunterYPos + game.hunterYVel
+        if not sameSide(xPos,yPos,game.preyXPos,game.preyYPos,newWallEqn):
+            newWall = 0
     if len(game.walls) >= game.maxWalls-1:
         distances = []
         i = 0
         for wall in game.walls :
-            dist = distanceToWall(game.preyXPos,game.preyYPos,wall)
+            dist = distanceToWall(game.preyXPos,game.preyYPos,wall) + distanceToWall(game.hunterXPos,game.hunterYPos,wall)
             distances.append((i,dist))
             i = i+1
         distances.sort(key=lambda tup: tup[1])
@@ -287,12 +292,13 @@ def strat3(game):
     bestWall = 0
     bestWallEqn = 0
     delWalls = ""
+
     for i in range(4):
         wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
         #print str(i) + " " + str(wallEqn)
         dist1 = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)
         dist2 = math.hypot(game.preyXPos - game.hunterXPos, game.preyYPos - game.hunterYPos)
-        if (dist2 < 25 or dist1 < game.wallPlacementDelay/2) and sameSide(game.hunterXPos, game.hunterXPos, game.preyXPos, game.preyYPos, wallEqn): #and movingToward(game):
+        if (dist1 < game.wallPlacementDelay/2) and sameSide(game.hunterXPos, game.hunterXPos, game.preyXPos, game.preyYPos, wallEqn): #and movingToward(game):
             xPos = game.hunterXPos + game.hunterXVel
             yPos = game.hunterYPos + game.hunterYVel
             if sameSide(xPos, yPos, game.preyXPos, game.preyYPos, wallEqn):
@@ -309,13 +315,60 @@ def strat3(game):
     newWall = bestWall
     newWallEqn = bestWallEqn
 
+
+
     if game.numWalls>game.maxWalls-3:
         delWalls = delWalls + "0 2 "
 
 
     return str(newWall) + " " + str(delWalls)
 
+def strat4(game):
+    global minArea
+    if minArea == -1:
+        minArea = len(findRestrictedArea(game.preyXPos,game.preyYPos,game.wallEqns))
+    #print minArea
+    bestWall = 0
+    bestWallEqn = 0
+    delWalls = ""
 
+    if game.numWalls>game.maxWalls-3:
+        delWalls = delWalls + "0 2 "
+
+
+    return str(newWall) + " " + str(delWalls)
+
+def preyStrat(game):
+    '''x = list(game.wallEqns)
+    x.append([0,1,-300])
+    x.append([0,1,0])
+    x.append([1,0,300])
+    x.append([1,0,0])
+    maxDist = 0
+    for wall in x :
+        dist = distanceToWallEqn(game.preyXPos,game.preyYPos,wall)
+        if dist>maxDist:
+            maxDist = dist
+            yMov = wall[1]
+            xMov = wall[0]'''
+
+
+    if game.preyXPos > 150 :
+        xMov = - random.randint(0,1)
+    else :
+        xMov = random.randint(0,1)
+
+    if game.preyYPos > 150 :
+        yMov = - random.randint(0,1)
+    else :
+        yMov = random.randint(0,1)
+
+    return str(xMov) + " " + str(yMov)
+
+def prey(data,strat):
+    game = currGame(data)
+
+    return preyStrat(game)
 
 def hunter(data,strat):
     game = currGame(data)

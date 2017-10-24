@@ -54,8 +54,9 @@ while True:
         else:
 
             #[gameNum] [tickNum] [x movement] [y movement]
+            move = hunter.prey(data,strat)
 
-            tosend = data[1] + " " + data[2] + " " + str(0) + " " + str(0)
+            tosend = data[1] + " " + data[2] + " " + move
 
     if tosend is not None:
         #print "sending: " + tosend
