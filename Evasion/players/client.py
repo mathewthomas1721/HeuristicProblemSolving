@@ -6,7 +6,7 @@ import time
 import random
 import hunter
 
-host = "localhost"
+host = "172.16.42.248"
 port = int(sys.argv[1])
 strat = int(sys.argv[2])
 
@@ -46,7 +46,7 @@ while True:
         #print len(data)
         if isHunter:
 
-            
+
             move = hunter.hunter(data,strat)
 
             tosend = data[1] + " " + data[2] + " " + move

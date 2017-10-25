@@ -214,8 +214,6 @@ class currGame:
 
                 self.walls.append(tempWall) #parse wall data
 
-
-
 def strat1(game):
     newWall = 0
     delWalls = ""
