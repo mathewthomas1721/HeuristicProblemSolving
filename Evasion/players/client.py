@@ -6,7 +6,7 @@ import time
 import random
 import hunter
 
-host = "localhost"
+host = "172.16.42.248"
 port = int(sys.argv[1])
 strat = int(sys.argv[2])
 
@@ -46,17 +46,17 @@ while True:
         #print len(data)
         if isHunter:
 
-            #[gameNum] [tickNum] [wall type to add] [wall index to delete] [wall index to delete] [wall index to delete] ...
+
             move = hunter.hunter(data,strat)
-            #x = random.randint(0,3)
-            #print "X = " + str(x)s
+
             tosend = data[1] + " " + data[2] + " " + move
         else:
 
             #[gameNum] [tickNum] [x movement] [y movement]
+            move = hunter.prey(data,strat)
 
-            tosend = data[1] + " " + data[2] + " " + str(0) + " " + str(0)
+            tosend = data[1] + " " + data[2] + " " + move
 
     if tosend is not None:
-        print "sending: " + tosend
+        #print "sending: " + tosend
         sock.sendall(tosend + "\n")
