@@ -90,7 +90,23 @@ If each player lost a round then its a draw.
 If no one made any invalid move then the one choreographer who uses fewer steps will win.
 
 ## Graphic Interface
-Under construction...
+In order to run UI display, you need to install some requirements.  
+First install node dependencies:
+```bash
+npm install
+```
+Then install one python dependency:
+```bash
+pip install requests
+```
+Now you can run the node server using:
+```bash
+node index.js
+```
+And go to `127.0.0.1:3000` in your browser. I hardcoded the ip and port...  
+Then start the game as normal except adding one more option `-u` at the end.  
+
+With display mode, executing/validating move stage will run a bit slower so that it can be observed by human.
 
 ## Contact
 Let me know if there is any bugs or problems.  
