@@ -100,7 +100,7 @@ def main():
   # create client
   client = Client(host, port)
   # send team name
-  client.send("SamplePlayer")
+  client.send("BabySnakes")
   # receive other parameters
   parameters = client.receive()
   parameters_l = parameters.split()
