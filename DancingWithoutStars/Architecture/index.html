@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Dancing without stars</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style>
+      .board {
+        width: 99vh;
+        height: 99vh;
+        border:1px solid black;
+        box-sizing: unset;
+      }
+      .tile {
+        box-sizing: unset;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-7"><div id="board" class="board"></div></div>
+        <div class="col-md-5">
+          <div class="row"><Strong><h2>Welcome to Dancing Without Stars!</h2></Strong></div>
+          <div class="row">Choreographer:  <span id="chore"></span></div>
+          <div class="row">Spoiler:  <span id="spoi"></span></div>
+          <div class="row">Stage: <span id="stage"></span></div>
+          <div class="row"><span id="timer"></span></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var color_list = ['red', 'blue', 'green', 'orange', 'purple', 'chocolate', 'pink', 'yellow'];
+      // a flag to show if the board has been initialized
+      var initialized = false;
+      var timer = false; // timer flag
+
+      /**
+       * Initialize a board into #board div using the given size.
+       */
+      function initialBoard(size) {
+        for (var i=0; i < size; i++) {
+          for (var j=0; j < size; j++) {
+            var color = parseInt((i / size) + i) % 2 == parseInt((j / size) + j) % 2 ? 'gainsboro' : 'white';
+            var width = $('#board').width() / size;
+            var height = $('#board').height() / size;
+            var style = '\'width: ' + width + 'px; '
+              + 'height: ' + height + 'px; '
+              + 'float: left; background-color: ' + color + ';\'';
+            var elmt = '<div id="' + i + '-' + j + '" class="tile" style=' + style + '></div>'
+            $('#board').append(elmt);
+          }
+        }
+      }
+
+      function updateTile(row, col, item) {
+        var tile = $('#' + row + '-' + col);
+        if (item == 0) {
+          tile.html(''); // clear
+          tile.css('color', 'black');
+        } else if (item == -1) {
+          tile.html('#');
+          tile.css('color', 'black');
+        } else {
+          tile.html(item);
+          tile.css('color', getColor(item));
+        }
+      }
+
+      function startTimer() {
+        // set timer to 120.00
+        $('#timer').html(120.00);
+        timer = true;
+        // start updating timer
+        updateTimer();
+      }
+
+      function stopTimer() {
+        timer = false;
+      }
+
+      function updateTimer() {
+        if (timer) {
+          // get current value
+          var value = parseFloat($('#timer').html());
+          value = value - 0.01;
+          if (value > 0) {
+            $('#timer').html(value);
+            setTimeout(function() {
+              updateTimer();
+            }, 10);
+          } else {
+            value = 0.0;
+            $('#timer').html(value);
+            $('#timer').css('color', 'red'); // change text to a warning color
+          }
+        } else {
+          cleanTimer();
+        }
+      }
+
+      function cleanTimer() {
+        $('#timer').html(''); // clear
+        $('#timer').css('color', 'black'); // change color back
+      }
+
+      function getColor(color_num) {
+        if (color_num > color_list.length) {
+          return 'black';
+        } else {
+          return color_list[color_num - 1];
+        }
+      }
+
+      /**
+       * state
+       * {
+       *  board_size : int,
+       *  num_color : int,
+       *  choreographer : string,
+       *  spoiler : string,
+       *  stage : string,
+       *  board : [[]],
+       *  timer : true or false
+       * }
+       */
+      function updateState(state) {
+        // update board first
+        var board = state.board;
+        for (var i=0; i < state.board_size; i++) {
+          for (var j=0; j < state.board_size; j++) {
+            var item = board[i][j]
+            updateTile(i, j, item);
+          }
+        }
+        // update stage info
+        $('#stage').html(state.stage);
+        // check timer
+        if (state.timer) {
+          startTimer();
+        } else {
+          stopTimer();
+          cleanTimer();
+        }
+      }
+
+      $(function() {
+        // load socket.io
+        var socket = io();
+        socket.on('STATE', function(state) {
+          if (state) {
+            if (!initialized) {
+              initialBoard(state.board_size);
+              // set names
+              $('#chore').html(state.choreographer);
+              $('#spoi').html(state.spoiler);
+              initialized = true;
+            }
+            // update displayed info
+            updateState(state);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
