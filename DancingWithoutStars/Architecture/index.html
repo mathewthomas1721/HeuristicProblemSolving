@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <style>
       .board {
-        width: 760px;
-        height: 760px;
+        width: 99vh;
+        height: 99vh;
         border:1px solid black;
         box-sizing: unset;
       }
@@ -49,8 +49,8 @@
         for (var i=0; i < size; i++) {
           for (var j=0; j < size; j++) {
             var color = parseInt((i / size) + i) % 2 == parseInt((j / size) + j) % 2 ? 'gainsboro' : 'white';
-            var width = 760 / size;
-            var height = 760 / size;
+            var width = $('#board').width() / size;
+            var height = $('#board').height() / size;
             var style = '\'width: ' + width + 'px; '
               + 'height: ' + height + 'px; '
               + 'float: left; background-color: ' + color + ';\'';

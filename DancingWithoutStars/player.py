@@ -95,9 +95,43 @@ def get_a_move(dancers, stars, k, board_size, num_color):
       count += 1
   return "5 " + move
 
+def checkerBoardGraph(board_size):
+    cBG = []
+    for i in range(board_size):
+        for j in range(board_size):
+            if i < board_size-1:
+                cBG.append((str(i) + "," + str(j), str(i+1) + "," + str(j), 1))
+                cBG.append((str(i+1) + "," + str(j), str(i) + "," + str(j), 1))
+            if j < board_size-1:
+                cBG.append((str(i) + "," + str(j), str(i) + "," + str(j+1), 1))
+                cBG.append((str(i) + "," + str(j+1), str(i) + "," + str(j), 1))
+            if i >= 0:
+                cBG.append((str(i) + "," + str(j), str(i-1) + "," + str(j), 1))
+                cBG.append((str(i-1) + "," + str(j), str(i) + "," + str(j), 1))
+            if j >= 0:
+                cBG.append((str(i) + "," + str(j), str(i) + "," + str(j-1), 1))
+                cBG.append((str(i) + "," + str(j-1), str(i) + "," + str(j), 1))
+    return cBG
+
+def dijkstra(edges, f, t):
+    g = defaultdict(list)
+    for l,r,c in edges:
+        g[l].append((c,r))
+
+    q, seen = [(0,f,())], set()
+    while q:
+        (cost,v1,path) = heappop(q)
+        if v1 not in seen:
+            seen.add(v1)
+            path = (v1, path)
+            if v1 == t: return (cost, path)
+
+            for c, v2 in g.get(v1, ()):
+                if v2 not in seen:
+                    heappush(q, (cost+c, v2, path))
+
 def main():
-  host, port, player = get_args()
-  # create client
+a  # create client
   client = Client(host, port)
   # send team name
   client.send("BabySnakes")
@@ -137,7 +171,8 @@ def main():
     client.send(str(random_dancer[0]) + " " + str(random_dancer[1]) + " " + str(random_dancer[0]) + " " + str(random_dancer[1] + 4))
 
   # close connection
-  client.close()
+  client.close()'''
+  #print (checkerBoardGraph(50))
 
 if __name__ == "__main__":
   main()
