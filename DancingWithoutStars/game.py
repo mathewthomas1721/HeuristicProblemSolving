@@ -46,10 +46,10 @@ class Game(object):
       if len(tokens) == 0:
         continue # skip empty lines
       elif len(tokens) == 2:
-        dancers[cur].add((int(tokens[0]), int(tokens[1])))
+        dancers[cur].append((int(tokens[0]), int(tokens[1])))
       else:
         cur = int(tokens[len(tokens) - 1]) - 1
-        dancers.append(set())
+        dancers.append(list())
     return file_input, dancers
 
   def __setup_board(self, dancers, size):
@@ -116,10 +116,6 @@ class Game(object):
     elif self.board[start_x][start_y] in (0, -1):
       print("no dancer at this start location")
       return False # no dancer at this location
-    # check if start == end
-    elif start_x == end_x and start_y == end_y:
-      print("no movement at all")
-      return False # no movement at all
     # check if the dancer will move to a star
     elif self.board[end_x][end_y] == -1:
       print("There is a star at end location")
@@ -224,46 +220,68 @@ class Game(object):
   def __update_dancers(self, moves):
     """
     Make a list of parallel movements.\n
-    Those movements count as 1 step since they happen at the same time.
+    Those movements count as 1 step since they happen at the same time.\n
+    1. go through all the moves and check if there is an invalid case:
+      - there is no dancer from the start position
+      - the move is more than 1 manhattan distance
+      - the dancer is moving to a star
+    2. check if there is any tile contains more than 1 dancers.
+    Finally update tmp_board to self.board
     """
     self.dancer_steps += 1
     success = True
     msg = None
-    moved = set()
-    for m in moves:
-      # start pos
-      x1 = m[0]
-      y1 = m[1]
-      # end pos
-      x2 = m[2]
-      y2 = m[3]
-      # check if this dancer has already been moved
-      # also check the end position
-      # because if the end position is moved then we can't swap them
-      if (x1, y1) in moved or (x2, y2) in moved:
-        success = False
-        msg = "Choreographer attempt to move a dance twice in one move from " + str(x1) + ", " + str(y1) \
-          + " to " + str(x2) + ", " + str(y2)
-        break
+    # copy the current board into a three dimensional board
+    # and only contain dancers
+    # so that one spot can contain more than 1 dancers
+    tmp_board = list()
+    for i in range(self.board_size):
+      tmp_board.append(list()) # append the ith list
+      for j in range(self.board_size):
+        tmp_board[i].append(list()) # append the jth
+        if self.board[i][j] not in (0, -1): # not adding empty space or star
+          tmp_board[i][j].append(self.board[i][j])        
+
+    # for each move
+    for (x1, y1, x2, y2) in moves:
+      # check if this is a valid move
       if self.__is_dancer_move_valid(x1, y1, x2, y2):
         # make the move
-        s_c = self.board[x1][y1] # color of start point
-        e_c = self.board[x2][y2] # color of end point
-        if s_c != e_c: # they have the same color then nothing need to be done
-          # check if there is a dancer at end point
-          if e_c != 0:
-            self.dancers[e_c-1].remove((x2, y2))
-            self.dancers[e_c-1].add((x1, y1))
-            moved.add((x1, y1))
-          self.dancers[s_c-1].remove((x1, y1))
-          self.dancers[s_c-1].add((x2, y2))
-          moved.add((x2, y2))
-          self.board[x1][y1], self.board[x2][y2] = e_c, s_c # swap them on board
+        # update self.dancers
+        color = self.board[x1][y1]
+        self.dancers[color-1].remove((x1, y1))
+        self.dancers[color-1].append((x2, y2))
+        # update tmp_board
+        tmp_board[x1][y1].remove(color)
+        tmp_board[x2][y2].append(color)
       else:
         success = False
         msg = "Choreographer made an invalid move from " + str(x1) + ", " + str(y1) \
           + " to " + str(x2) + ", " + str(y2)
         break
+
+    # finally check if there is more than 1 dancers in a spot
+    # and update tmp_board to self.board
+    break_signal = False
+    for i in range(self.board_size):
+      for j in range(self.board_size):
+        # skip star since it will be check while making the moves
+        if self.board[i][j] == -1:
+          continue
+        # check if there is more than 1 dancers in this spot
+        if len(tmp_board[i][j]) > 1:
+          success = False
+          break_signal = True
+          msg = "Choreographer made an invalid step, multiple dancers found in spot " + str(i) + ", " + str(j)
+          break
+        # now update to self.board
+        if len(tmp_board[i][j]) == 0:
+          self.board[i][j] = 0
+        else: # length == 1
+          self.board[i][j] = tmp_board[i][j][0]
+      if break_signal:
+        break
+
     return success, msg
 
   def get_board(self):
