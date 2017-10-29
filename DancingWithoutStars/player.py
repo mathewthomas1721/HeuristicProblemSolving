@@ -131,8 +131,7 @@ def dijkstra(edges, f, t):
                     heappush(q, (cost+c, v2, path))
 
 def main():
-  '''host, port, player = get_args()
-  # create client
+a  # create client
   client = Client(host, port)
   # send team name
   client.send("BabySnakes")
