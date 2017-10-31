@@ -4,6 +4,7 @@ import numpy as np
 from client import Client
 from getopt import getopt, GetoptError
 from sklearn.cluster import KMeans
+import SimonNeal as sn
 
 """
 python3 sample_player.py -H <host> -p <port> <-c|-s>
@@ -27,6 +28,10 @@ def formatting(unformat, c, k):
     for i in range(k):
         for j in range(c):
             formattedData.append(unformat[(j*k)+i])
+    print("AFTER FORMATTING")
+    print(k,c)
+    print(len(formattedData))
+
     return np.array(formattedData)
 
 def print_usage():
@@ -81,24 +86,64 @@ def get_args():
   return stars_str'''
 
 def get_stars(boardData, size, k, c):
-    superSet = []
+    '''superSet = []
     for i in range(size):
         for j in range(size):
-            superSet.append([i,j])
-    superSet = np.array(superSet)
-
+            superSet.append((i,j))
+    superSet = set(superSet)'''
+    #print("IN GET STARS1")
+    #print(len(boardData))
     boardData.sort()
+    #print("IN GET STARS2")
+    #print(len(boardData))
+    boardData = list(boardData)
+    #print("IN GET STARS5")
+    #print(len(boardData))
+    boardData = [tuple(l) for l in boardData]
+    #print("IN GET STARS6")
+    #print(len(boardData))
+    #print(boardData)
+    #print("IN GET STARS4")
+    #print(len(boardData))
+    #boardData = set(boardData)
+    #print("IN GET STARS3")
+    #print(len(boardData))
 
+    #print("BOARD data")
+    #for item in boardData:
+    #    print(item)
+    #print("BOARD DATA LENGTH")
+    #print(len(boardData))
+    #for item in boardData:
+    #    superSet.remove(item)
+    #print(superSet)
+
+    #freeSet = superSet.difference(boardData)
+    #freeSet = list(freeSet)
     kmeans = KMeans(n_clusters=k, random_state=0).fit(boardData)
-    #kmeans.cluster_centers_
-    a1_rows = superSet.view([('', superSet.dtype)] * superSet.shape[1])
-    a2_rows = boardData.view([('', boardData.dtype)] * boardData.shape[1])
-    freeSet = np.setdiff1d(a1_rows, a2_rows).view(superSet.dtype).reshape(-1, superSet.shape[1])
+    kmeans.cluster_centers_
+    #a1_rows = superSet.view([('', superSet.dtype)] * superSet.shape[1])
+    #a2_rows = boardData.view([('', boardData.dtype)] * boardData.shape[1])
+    #freeSet = np.setdiff1d(a1_rows, a2_rows).view(superSet.dtype).reshape(-1, superSet.shape[1])
     stars = np.array([])
-    freeSet = list(freeSet)
+    #freeSet = list(freeSet)
+
     stars = []
     centers = list(kmeans.cluster_centers_)
     for center in centers:
+        center = [int(i) for i in center]
+        center = tuple(center)
+        print(center)
+        if center not in boardData:
+            check = 1
+            for star in stars :
+                if manhattan_distance(center[0],center[1],star[0],star[1]) <= c:
+                    check = -1
+                    break
+            if check == 1:
+                stars.append(list(center))
+
+    '''for center in centers:
         #print(center)
         print(center)
         intcenter = list(center)
@@ -109,12 +154,21 @@ def get_stars(boardData, size, k, c):
                 check = -1
                 break
         if check == 1:
-            stars.append(list(new))
+            stars.append(list(new))'''
 
     if len(stars)<k:
 
         while len(stars)<k:
-            choice = random.choice(freeSet)
+            choice = (random.randint(0,size-1), random.randint(0,size-1))
+            #print(choice)
+            if choice in boardData:
+                while choice in boardData:
+                    print("DUPLICATE")
+
+                    choice = (random.randint(0,size-1), random.randint(0,size-1))
+                    print("NEW CHOICE")
+                    print(choice)
+                #choice = random.choice(freeSet)
             check = 1
             for star in stars :
                 if manhattan_distance(choice[0],choice[1],star[0],star[1]) <= c:
@@ -204,17 +258,25 @@ def main():
   file_data = client.receive()
   #print (file_data)
   # process file
-  dancers_unformat = process_file(file_data) # a set of initial dancers
+  dancers_unformat = process_file(file_data)
+  print(dancers_unformat)
+  print("RECEIVED BOARD DATA LENGTH")
+  print(len(dancers_unformat))
+    # a set of initial dancers
+
   dancers_format = formatting(dancers_unformat,num_color,k)
+  print(dancers_format)
+  print("AFTER FORMATING in ")
+  print(len(dancers_format))
   # now start to play
   #stars1 = stars(dancers_format, board_size,k,num_color)
   #dancers = [list(elem) for elem in dancers]
   #print(stars1)
   #print(k)
   if player == "s":
-    stars1 = get_stars(dancers_format, board_size,k,num_color)
+    stars1 = get_stars(dancers_unformat, board_size,k,num_color)
     stars1 = ' '.join(str(r) for v in stars1 for r in v)
-    print(stars1)
+    #print(stars1)
     client.send(stars1)
   else: # choreographer
     stars_str = client.receive()
@@ -225,21 +287,19 @@ def main():
     while i < len(stars_str_l):
         stars.append([int(stars_str_l[i]), int(stars_str_l[i+1])])
         i = i + 2
-    stars = numpy.array(stars)
-    '''stars = []
-    for i in range(int(len(stars_str_l)/2)):
-      stars.append[int(stars_str_l[i]), int(stars_str_l[i+1])]
-    print(stars)'''
-    '''for i in range(0, 1000): # send a thousand random moves
-      move = get_a_move(dancers, stars, k, board_size, num_color)
-      print(move)
+    stars = np.array(stars)
+    moves,line = sn.anneal(dancers_format,stars,board_size,k,num_color)
+    for move in moves: # send a thousand random moves
+      #print(move)
       client.send(move)
+    client.send(" &")
     # send DONE flag
     client.send("DONE")
     # send a random line
-    random_dancer = random.sample(dancers, 1)[0]
+    '''random_dancer = random.sample(dancers, 1)[0]
     client.send(str(random_dancer[0]) + " " + str(random_dancer[1]) + " " + str(random_dancer[0]) + " " + str(random_dancer[1] + 4))
     '''
+    client.send(line)
   # close connection
   client.close()
   #print (checkerBoardGraph(50))'''

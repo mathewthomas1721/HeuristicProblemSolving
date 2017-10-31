@@ -4,8 +4,8 @@ import copy
 
 """size = 18
 numd = 18
-numc = 4
-np.set_printoptions(threshold=np.nan)"""
+numc = 4"""
+np.set_printoptions(threshold=np.nan)
 #andom.seed(100)
 
 """for i in range(k*c):
@@ -23,7 +23,7 @@ def process_moves(moves, n, k, c):
         for move in move_list:
             st += " " + str(move[0]) + " " + str(move[1]) + " " + str(move[2]) + " " + str(move[3])
         move_strings.append(st)
-        print(st)
+        #print(st)
     return move_strings
 
 
@@ -44,7 +44,7 @@ def moves(initial, final, init_mat, n, k, c):
     while (True):
         timestep += 1
         if timestep > 50:
-            print(mat)
+            print("Error. stuck")
             return None
         #print(timestep)
         #print(mat)
@@ -180,6 +180,8 @@ def moves(initial, final, init_mat, n, k, c):
                         dmc = alt_move[1]
                         alt_move = (0,0)
                         other = mat[current[i,0] + dmr, current[i,1] + dmc]
+                        if other == -1:
+                            continue
                         #print(i, other, moved[other],(dmr, dmc),  (desired_moves[other,0], desired_moves[other,1]), dists[i], dists[other], t )
                         if ((t > 2) and moved[other] == 0 and ((desired_moves[other,0], desired_moves[other,1]) == (-1 * dmr, -1 * dmc) or (dists[other] < dists[i]))):
                             #print("swap", i, other)
@@ -232,12 +234,13 @@ def initialize(init, init_mat, n, k, c):
 def get_row(ind, rowlist, list, n, k, c):
     for row in range(k):
         if rowlist[row, 2] == 0:
-            if (rowlist[row, 0] == list[ind, 0]) and (list[ind, 1] - rowlist[row, 1] < c):
+            if (rowlist[row, 0] == list[ind, 0]) and (list[ind, 1] - rowlist[row, 1] < c) and (list[ind, 1] - rowlist[row, 1] >= 0):
                 return row
         else:
-            if (rowlist[row, 1] == list[ind, 1]) and (list[ind, 0] - rowlist[row, 0] < c):
+            if (rowlist[row, 1] == list[ind, 1]) and (list[ind, 0] - rowlist[row, 0] < c) and (list[ind, 0] - rowlist[row, 0] >= 0):
                 return row
     print("error")
+    quit()
 
 def cost(final, initial, n, k, c):
     max_dist = 0
@@ -342,11 +345,12 @@ def anneal(dancers, stars, n, k, c):
     initial_mat.fill(-2)
     final = np.zeros((k*c,2), dtype=np.int)
     rowlist = np.zeros((k,3), dtype=np.int)
-    stars = np.zeros((k,2), dtype=np.int)
 
     initial = copy.deepcopy(dancers)
-    for i in range(0):
+    for i in range(k):
         initial_mat[stars[i,0], stars[i,1]] = -1
+    #print(stars)
+    #print(initial_mat)
     mat = copy.deepcopy(initial_mat)
     initialize(initial, initial_mat, n, k, c)
     new = copy.deepcopy(mat)
@@ -368,7 +372,7 @@ def anneal(dancers, stars, n, k, c):
     mat = new
     final = newf
     rowlist = newrl
-    print(cst)
+    #print(cst)
     while T > 0:
         temp = (T/Max_temp) ** 4.0
         new = copy.deepcopy(mat)
@@ -434,9 +438,21 @@ def anneal(dancers, stars, n, k, c):
             cst = c1
             #print(cst, T, "swapcolor")
         T -= 1
-    print(cst)
+    #print(cst)
+    #print(mat)
+    lines = ""
+    for rowl in range(k):
+        lines += str(rowlist[rowl, 0]) + " "
+        lines += str(rowlist[rowl, 1]) + " "
+        if rowlist[rowl, 2] == 0:
+            lines += str(rowlist[rowl, 0]) + " "
+            lines += str(rowlist[rowl, 1] + c - 1) + " "
+        else:
+            lines += str(rowlist[rowl, 0] + c - 1) + " "
+            lines += str(rowlist[rowl, 1]) + " "
+    #print(lines)
     print(mat)
-    return moves(initial, final, initial_mat, n, k, c)
+    return (moves(initial, final, initial_mat, n, k, c), lines)
 
 
 
