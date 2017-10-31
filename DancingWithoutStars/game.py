@@ -216,7 +216,7 @@ class Game(object):
         msg = "Spoiler placed an invalid star at: " + str(s[0]) + ", " + str(s[1])
         break
     return success, msg
-  
+
   def __update_dancers(self, moves):
     """
     Make a list of parallel movements.\n
@@ -240,7 +240,7 @@ class Game(object):
       for j in range(self.board_size):
         tmp_board[i].append(list()) # append the jth
         if self.board[i][j] not in (0, -1): # not adding empty space or star
-          tmp_board[i][j].append(self.board[i][j])        
+          tmp_board[i][j].append(self.board[i][j])
 
     # for each move
     for (x1, y1, x2, y2) in moves:
@@ -394,7 +394,7 @@ class Game(object):
         y2 = move_data.pop(0)
         moves.append([int(x1), int(y1), int(x2), int(y2)])
       steps.append(moves)
-    
+
     # now execute the moves
     print("executing the moves...")
     for m in steps:
@@ -417,7 +417,7 @@ class Game(object):
       sys.exit(2)
     for i in range(int(len(li_l)/4)):
       lines.append((li_l[4*i], li_l[4*i+1], li_l[4*i+2], li_l[4*i+3]))
-    
+
     # check if the choreographer has reached the goal
     if self.__check_finish(lines):
       print("Game finished!")
@@ -460,7 +460,7 @@ def main():
       size = int(arg)
     elif opt == "-u":
       using_ui = True
-  # initialize game    
+  # initialize game
   game = Game(host, port, filename, size)
   # run game
   game.start_game(using_ui)

@@ -41,6 +41,7 @@
       // a flag to show if the board has been initialized
       var initialized = false;
       var timer = false; // timer flag
+      var starTime = null; // Timer start
 
       /**
        * Initialize a board into #board div using the given size.
@@ -78,6 +79,7 @@
         // set timer to 120.00
         $('#timer').html(120.00);
         timer = true;
+        startTime = new Date().getTime()
         // start updating timer
         updateTimer();
       }
@@ -88,17 +90,15 @@
 
       function updateTimer() {
         if (timer) {
-          // get current value
-          var value = parseFloat($('#timer').html());
-          value = value - 0.01;
-          if (value > 0) {
-            $('#timer').html(value);
+          var timeElapsed = (new Date().getTime() - startTime) / 1000; // Dividing by 1000 converts ms to seconds
+          var timeLeft = 120.0 - timeElapsed;
+          if (timeLeft > 0) {
+            $('#timer').html(timeLeft.toFixed(3));
             setTimeout(function() {
               updateTimer();
             }, 10);
           } else {
-            value = 0.0;
-            $('#timer').html(value);
+            $('#timer').html(Number(0).toFixed(3));
             $('#timer').css('color', 'red'); // change text to a warning color
           }
         } else {

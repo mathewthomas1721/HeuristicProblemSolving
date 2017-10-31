@@ -1,21 +1,33 @@
 #!/usr/bin/python
 import sys, random
+import numpy as np
 from client import Client
 from getopt import getopt, GetoptError
+from sklearn.cluster import KMeans
 
 """
 python3 sample_player.py -H <host> -p <port> <-c|-s>
 """
+def manhattan_distance(x1, y1, x2, y2):
+  return abs(x1 - x2) + abs(y1 - y2)
 
 def process_file(file_data):
   """read in input file"""
-  dancers = set()
+  dancers = list()
   f = file_data.split("\n")
   for line in f:
     tokens = line.split()
     if len(tokens) == 2:
-      dancers.add((int(tokens[0]), int(tokens[1])))
+      dancers.append([int(tokens[0]), int(tokens[1])])
+
   return dancers
+
+def formatting(unformat, c, k):
+    formattedData = []
+    for i in range(k):
+        for j in range(c):
+            formattedData.append(unformat[(j*k)+i])
+    return np.array(formattedData)
 
 def print_usage():
   print("Usage: python3 sample_player.py -H <host> -p <port>")
@@ -47,7 +59,7 @@ def get_args():
   return host, port, player
 
 # TODO add your method here
-def get_stars(dancers, k, board_size, num_color):
+'''def get_stars(dancers, k, board_size, num_color):
   stars = set()
   x = -1
   y = -1
@@ -66,10 +78,56 @@ def get_stars(dancers, k, board_size, num_color):
   stars_str = ""
   for s in stars:
     stars_str += (str(s[0]) + " " + str(s[1]) + " ")
-  return stars_str
+  return stars_str'''
+
+def get_stars(boardData, size, k, c):
+    superSet = []
+    for i in range(size):
+        for j in range(size):
+            superSet.append([i,j])
+    superSet = np.array(superSet)
+
+    boardData.sort()
+
+    kmeans = KMeans(n_clusters=k, random_state=0).fit(boardData)
+    #kmeans.cluster_centers_
+    a1_rows = superSet.view([('', superSet.dtype)] * superSet.shape[1])
+    a2_rows = boardData.view([('', boardData.dtype)] * boardData.shape[1])
+    freeSet = np.setdiff1d(a1_rows, a2_rows).view(superSet.dtype).reshape(-1, superSet.shape[1])
+    stars = np.array([])
+    freeSet = list(freeSet)
+    stars = []
+    centers = list(kmeans.cluster_centers_)
+    for center in centers:
+        #print(center)
+        print(center)
+        intcenter = list(center)
+        new = min(freeSet, key=lambda x:abs(x[0]-center[0]) + abs(x[1]-center[1]))
+        check = 1
+        for star in stars :
+            if manhattan_distance(new[0],new[1],star[0],star[1]) <= c:
+                check = -1
+                break
+        if check == 1:
+            stars.append(list(new))
+
+    if len(stars)<k:
+
+        while len(stars)<k:
+            choice = random.choice(freeSet)
+            check = 1
+            for star in stars :
+                if manhattan_distance(choice[0],choice[1],star[0],star[1]) <= c:
+                    check = -1
+                    break
+            if check == 1:
+                stars.append(list(choice))
+
+    print (len(stars))
+    return np.array(stars)
 
 # TODO add your method here
-def get_a_move(dancers, stars, k, board_size, num_color):
+'''def get_a_move(dancers, stars, k, board_size, num_color):
   # pick 5 random dancers from dancers
   count = 0
   moved = set()
@@ -93,7 +151,7 @@ def get_a_move(dancers, stars, k, board_size, num_color):
       dancers.add((x2, y2))
       moved.add((x2, y2))
       count += 1
-  return "5 " + move
+  return "5 " + move'''
 
 def checkerBoardGraph(board_size):
     cBG = []
@@ -131,7 +189,8 @@ def dijkstra(edges, f, t):
                     heappush(q, (cost+c, v2, path))
 
 def main():
-a  # create client
+  # create client
+  host,port,player = get_args()
   client = Client(host, port)
   # send team name
   client.send("BabySnakes")
@@ -143,24 +202,28 @@ a  # create client
   k = int(parameters_l[2]) # max num of stars
   # receive file data
   file_data = client.receive()
+  #print (file_data)
   # process file
-  dancers = process_file(file_data) # a set of initial dancers
+  dancers_unformat = process_file(file_data) # a set of initial dancers
+  dancers_format = formatting(dancers_unformat,num_color,k)
   # now start to play
+  #stars1 = stars(dancers_format, board_size,k,num_color)
+  #dancers = [list(elem) for elem in dancers]
+  #print(stars1)
+  #print(k)
   if player == "s":
-    # TODO modify here
-    stars = get_stars(dancers, k, board_size, num_color)
-    print(stars)
-    # send stars
-    client.send(stars)
+    stars1 = get_stars(dancers_format, board_size,k,num_color)
+    stars1 = ' '.join(str(r) for v in stars1 for r in v)
+    print(stars1)
+    client.send(stars1)
   else: # choreographer
-    # TODO modify here
-    # receive stars from server
     stars_str = client.receive()
     stars_str_l = stars_str.split()
     stars = set()
     for i in range(int(len(stars_str_l)/2)):
       stars.add((int(stars_str_l[2*i]), int(stars_str_l[2*i+1])))
-    for i in range(0, 1000): # send a thousand random moves
+    #print("reached")
+    '''for i in range(0, 1000): # send a thousand random moves
       move = get_a_move(dancers, stars, k, board_size, num_color)
       print(move)
       client.send(move)
@@ -169,10 +232,10 @@ a  # create client
     # send a random line
     random_dancer = random.sample(dancers, 1)[0]
     client.send(str(random_dancer[0]) + " " + str(random_dancer[1]) + " " + str(random_dancer[0]) + " " + str(random_dancer[1] + 4))
-
+    '''
   # close connection
-  client.close()'''
-  #print (checkerBoardGraph(50))
+  client.close()
+  #print (checkerBoardGraph(50))'''
 
 if __name__ == "__main__":
   main()
