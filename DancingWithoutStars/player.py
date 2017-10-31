@@ -3,6 +3,7 @@ import sys, random
 import numpy as np
 from client import Client
 from getopt import getopt, GetoptError
+from sklearn.cluster import KMeans
 
 """
 python3 sample_player.py -H <host> -p <port> <-c|-s>
@@ -88,20 +89,41 @@ def get_stars(boardData, size, k, c):
 
     boardData.sort()
 
+    kmeans = KMeans(n_clusters=k, random_state=0).fit(boardData)
+    #kmeans.cluster_centers_
     a1_rows = superSet.view([('', superSet.dtype)] * superSet.shape[1])
     a2_rows = boardData.view([('', boardData.dtype)] * boardData.shape[1])
     freeSet = np.setdiff1d(a1_rows, a2_rows).view(superSet.dtype).reshape(-1, superSet.shape[1])
-
+    stars = np.array([])
+    freeSet = list(freeSet)
     stars = []
-    while len(stars)<k:
-        choice = random.choice(freeSet)
+    centers = list(kmeans.cluster_centers_)
+    for center in centers:
+        #print(center)
+        print(center)
+        intcenter = list(center)
+        new = min(freeSet, key=lambda x:abs(x[0]-center[0]) + abs(x[1]-center[1]))
         check = 1
         for star in stars :
-            if manhattan_distance(choice[0],choice[1],star[0],star[1]) <= c:
+            if manhattan_distance(new[0],new[1],star[0],star[1]) <= c:
                 check = -1
                 break
         if check == 1:
-            stars.append(list(choice))
+            stars.append(list(new))
+
+    if len(stars)<k:
+
+        while len(stars)<k:
+            choice = random.choice(freeSet)
+            check = 1
+            for star in stars :
+                if manhattan_distance(choice[0],choice[1],star[0],star[1]) <= c:
+                    check = -1
+                    break
+            if check == 1:
+                stars.append(list(choice))
+
+    print (len(stars))
     return np.array(stars)
 
 # TODO add your method here
@@ -200,7 +222,7 @@ def main():
     stars = set()
     for i in range(int(len(stars_str_l)/2)):
       stars.add((int(stars_str_l[2*i]), int(stars_str_l[2*i+1])))
-    print("reached")
+    #print("reached")
     '''for i in range(0, 1000): # send a thousand random moves
       move = get_a_move(dancers, stars, k, board_size, num_color)
       print(move)
