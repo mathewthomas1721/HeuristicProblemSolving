@@ -219,10 +219,17 @@ def main():
   else: # choreographer
     stars_str = client.receive()
     stars_str_l = stars_str.split()
-    stars = set()
+    print(stars_str_l)
+    stars = []
+    i = 0
+    while i < len(stars_str_l):
+        stars.append([int(stars_str_l[i]), int(stars_str_l[i+1])])
+        i = i + 2
+    stars = numpy.array(stars)
+    '''stars = []
     for i in range(int(len(stars_str_l)/2)):
-      stars.add((int(stars_str_l[2*i]), int(stars_str_l[2*i+1])))
-    #print("reached")
+      stars.append[int(stars_str_l[i]), int(stars_str_l[i+1])]
+    print(stars)'''
     '''for i in range(0, 1000): # send a thousand random moves
       move = get_a_move(dancers, stars, k, board_size, num_color)
       print(move)

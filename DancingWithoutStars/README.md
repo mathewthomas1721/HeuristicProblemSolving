@@ -8,7 +8,7 @@ The choreographer is going to ask the dancers to make moves. The goal of the cho
 
 For example, there are color `1`, `2`, `3`, `4`, and `k = 3`, then the following is a valid final state:
 ```
-1234  2 
+1234  2
       1
   42133
       4
