@@ -365,7 +365,8 @@ class Solver:
 
 	def generate_output(self, CSolver):
 		print(1)
-		print(' '.join(map(str,CSolver)))
+		solution = [v + 1 for v in CSolver]
+		print(' '.join(map(str,solution)))
 
 
 

@@ -2,7 +2,7 @@ from Compat import *
 
 
 n, m, k = map(int, input().split())
-g = [map(int, input().split()) for i in range(k)]
+g = [[a for a in map(int, input().split())] for i in range(k)]
 
 s = Solver(n, m, k)
 
