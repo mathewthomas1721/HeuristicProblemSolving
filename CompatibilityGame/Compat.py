@@ -20,7 +20,7 @@ class Random_Poser:
 		self.compats = 0
 		self.compatibility_mat = np.zeros((self.num_packages*self.num_versions, self.num_packages*self.num_versions), dtype=np.int)
 		self.compatibility_list = []
-		
+
 
 	def first_config(self):
 		config = []
@@ -95,7 +95,7 @@ class Random_Poser:
 		while True:
 			while current_pack < self.num_packages:
 				config[current_pack] -= 1
-				version = config[current_pack]	
+				version = config[current_pack]
 				if version < 0:
 					config[current_pack] = self.num_versions
 					current_pack -= 1
@@ -293,7 +293,7 @@ class Solver:
 		current_pack = 0
 		while current_pack < self.num_packages:
 			config[current_pack] -= 1
-			version = config[current_pack]	
+			version = config[current_pack]
 			if version < 0:
 				config[current_pack] = self.num_versions
 				current_pack -= 1
@@ -387,8 +387,3 @@ print(CSolver)
 print(time.clock())
 
 """
-
-
-
-
-

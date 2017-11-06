@@ -1,8 +1,8 @@
 {
-    "id": 5,
-    "pid": "Fun",
-    "code": 63636,
-    "hostname": "localhost",
+    "id": 12,
+    "pid": "ReptileChildren",
+    "code": 914323,
+    "hostname": "linserv1.cims.nyu.edu",
     "port": 34567,
     "_comment": "id: Contest ID; pid: Problem Name; code: Your Access Code"
 }
