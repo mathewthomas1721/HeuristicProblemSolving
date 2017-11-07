@@ -1,8 +1,1 @@
-{
-    "id": 12,
-    "pid": "ReptileChildren",
-    "code": 914323,
-    "hostname": "linserv1.cims.nyu.edu",
-    "port": 34567,
-    "_comment": "id: Contest ID; pid: Problem Name; code: Your Access Code"
-}
+{"id": 20, "pid": "BabySnakes", "code": 772994, "hostname": "linserv1.cims.nyu.edu", "port": 34567, "_comment": "id: Contest ID; pid: Problem Name; code: Your Access Code"}

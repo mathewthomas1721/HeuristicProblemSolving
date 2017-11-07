@@ -122,9 +122,8 @@ class Random_Poser:
 			print(p1 + 1, v1 + 1, p2 + 1, v2 + 1)
 		print(len(self.config))
 		for config in self.config:
-			s = ""
-			for p in range(self.num_packages):
-				s += str(config[p] + 1) + " "
+			out_config = [v + 1 for v in config]
+			s = " ".join(map(str,out_config))
 			print(s)
 
 
@@ -351,7 +350,7 @@ class Solver:
 			else:
 				 current_pack += 1
 		if timeout:
-			print("restart")
+			#print("restart")
 			return self.set_search()
 		else:
 			return [packages[invperm[p]][len(packages[invperm[p]]) - 1] for p in range(self.num_packages)]
