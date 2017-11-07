@@ -213,18 +213,18 @@ class Eviler_Poser(Evil_Poser):
 					if self.k <= self.num_versions / 3:
 						for v1 in range(self.k):
 							for v2 in range(self.k):
-								if self.compatibility_mat[p1*self.num_versions + v1 + 2 * self.k, p2*self.num_versions + v2] == 0:
-									self.compatibility_mat[p1*self.num_versions + v1 + 2 * self.k, p2*self.num_versions + v2] = 1
-									self.compatibility_mat[p2*self.num_versions + v2, p1*self.num_versions + v1 + 2 * self.k] = 1
-									self.compatibility_list.append((p2*self.num_versions + v2, p1*self.num_versions + v1 + 2 * self.k))
+								if self.compatibility_mat[p1*self.num_versions + v1, p2*self.num_versions + v2 + 2 * self.k] == 0:
+									self.compatibility_mat[p1*self.num_versions + v1, p2*self.num_versions + v2 + 2 * self.k] = 1
+									self.compatibility_mat[p2*self.num_versions + v2 + 2 * self.k, p1*self.num_versions + v1] = 1
+									self.compatibility_list.append((p2*self.num_versions + v2  + 2 * self.k, p1*self.num_versions + v1))
 									self.compats += 1
 					else:
 						for v1 in range(self.k):
 							for v2 in range(self.k):
-								if self.compatibility_mat[p1*self.num_versions + v1, p2*self.num_versions + v2 + self.k] == 0:
-									self.compatibility_mat[p1*self.num_versions + v1, p2*self.num_versions + v2 + self.k] = 1
-									self.compatibility_mat[p2*self.num_versions + v2 + self.k, p1*self.num_versions + v1] = 1
-									self.compatibility_list.append((p2*self.num_versions + v2 + self.k, p1*self.num_versions + v1))
+								if self.compatibility_mat[p1*self.num_versions + v1  + self.k, p2*self.num_versions + v2] == 0:
+									self.compatibility_mat[p1*self.num_versions + v1 + self.k, p2*self.num_versions + v2] = 1
+									self.compatibility_mat[p2*self.num_versions + v2, p1*self.num_versions + v1  + self.k] = 1
+									self.compatibility_list.append((p2*self.num_versions + v2, p1*self.num_versions + v1 + self.k))
 									self.compats += 1
 
 
