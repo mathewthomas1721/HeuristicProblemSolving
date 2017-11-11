@@ -22,8 +22,9 @@ Not going to implement 2 and 3 because we have the client for that
 
 op = int(sys.argv[1])
 id1 = -1
-name = 'BabySnakes'
+name = 'FalqanSpawn'
 path = 'linserv1.cims.nyu.edu:34567'
+# args : numpackages, numversions, numcompatibles
 if op == 0:
     rightNow = datetime.datetime.now()
     poserTime = rightNow + datetime.timedelta(hours=2)
@@ -37,6 +38,7 @@ if op == 0:
     id1 = int(y[1:len(y)-1].split(',')[1].split(':')[1])
     print("CONTEST CREATED : " + str(id1))
     op = 1
+ # args : contest id
 if op == 1:
     if id1 == -1:
         id1 = int(sys.argv[2])
@@ -58,6 +60,8 @@ if op == 2:
         f.write(json.dumps(json_data))
 
     subprocess.call('./setup.sh && ./client.js poser', shell=True)
+
+# args : PoserID
 if op == 3:
     with open('client.json', 'r') as f:
         json_data = json.load(f)
