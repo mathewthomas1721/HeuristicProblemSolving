@@ -1,0 +1,17 @@
+Process all_paintings file
+
+Rank artists by how soon they auction n paintings
+
+Update rankings every round, based on how soon WE can get n paintings of that artist
+
+Base our bids on those rankings
+
+How?
+
+THAT'S THE QUESTION
+
+BASE STRATEGY
+
+Bid 0 or 1 on every painting that isn't our top ranked
+
+When it is our top ranked, assume we'll get all paintings for the same price = curr_money/n-number_we_have
