@@ -188,7 +188,7 @@ class AuctionManager:
                 self.players[max_bidder]['wealth'] -= bid_summary['bid_amount']
                 self.bid_winners[bid_item][max_bidder] += 1
 
-                if self.bid_winners[bid_item][max_bidder] > self.__required_count:
+                if self.bid_winners[bid_item][max_bidder] >= self.__required_count:
                     game_state['finished'] = True
                     game_state['winner'] = max_bidder  # wins
                     game_state['reason'] = ('Player {} won the game! Congrats!'

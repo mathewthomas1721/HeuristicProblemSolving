@@ -1,5 +1,5 @@
 import atexit
-import sys
+
 from client import Client
 import time
 import random
@@ -25,8 +25,8 @@ def calculate_bid(game_state):
 
 if __name__ == '__main__':
 
-    ip = sys.argv[1]
-    port = sys.arv[2]
+    ip = '127.0.0.1'
+    port = 9000
 
     client = Client('player_1', (ip, port))
     atexit.register(client.close)

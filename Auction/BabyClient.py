@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import atexit
 import sys
 from client import Client
@@ -21,12 +22,12 @@ def check_game_status(state):
 def calculate_bid(game_state):
 
     """Insert algorithm here"""
-    return random.randrange(0, 5)
+    return 1
 
 if __name__ == '__main__':
 
     ip = sys.argv[1]
-    port = sys.arv[2]
+    port = int(sys.argv[2])
 
     client = Client('BabySnakes', (ip, port))
     atexit.register(client.close)
