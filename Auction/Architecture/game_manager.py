@@ -185,7 +185,7 @@ class AuctionManager:
 
             if max_bid['amount'] > 0 and max_bidder is not None:
 
-                self.players[max_bidder]['wealth'] -= bid_summary['bid_amount']
+                self.players[max_bidder]['wealth'] -= max_bid['amount']
                 self.bid_winners[bid_item][max_bidder] += 1
 
                 if self.bid_winners[bid_item][max_bidder] >= self.__required_count:
@@ -218,6 +218,12 @@ class AuctionManager:
                 # game ends
                 game_state['finished'] = True
                 game_state['reason'] = 'No valid players remaining'
+
+            if auction_round == len(self.auction_items) - 1 and game_state['finished'] is False:
+                # last round and no winner, then set game to finished
+                game_state['finished'] = True
+                game_state['reason'] = 'Draw Game. Out of Auction Items.'
+
 
             self.__game_state.update(game_state)
             self.__over = game_state['finished']
