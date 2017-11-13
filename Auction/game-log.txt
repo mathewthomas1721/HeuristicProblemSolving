@@ -1,16 +1,4 @@
 No bidder on this round 0.
-Remaining time:	BabySnakes has 119.99936 seconds remaining	BabySnakes has 119.999342 seconds remainingRemaining wealth:	BabySnakes has 100 dollars remaining	BabySnakes has 100 dollars remaining------------------------------------
+Remaining time:	BabySnakes1 has 119.999162 seconds remaining	BabySnakes2 has 119.997549 seconds remainingRemaining wealth:	BabySnakes1 has 100 dollars remaining	BabySnakes2 has 100 dollars remaining------------------------------------
 No bidder on this round 1.
-Remaining time:	BabySnakes has 119.998835 seconds remaining	BabySnakes has 119.998484 seconds remainingRemaining wealth:	BabySnakes has 100 dollars remaining	BabySnakes has 100 dollars remaining------------------------------------
-No bidder on this round 2.
-Remaining time:	BabySnakes has 119.998442 seconds remaining	BabySnakes has 119.998073 seconds remainingRemaining wealth:	BabySnakes has 100 dollars remaining	BabySnakes has 100 dollars remaining------------------------------------
-No bidder on this round 3.
-Remaining time:	BabySnakes has 119.997974 seconds remaining	BabySnakes has 119.997701 seconds remainingRemaining wealth:	BabySnakes has 100 dollars remaining	BabySnakes has 100 dollars remaining------------------------------------
-No bidder on this round 4.
-Remaining time:	BabySnakes has 119.997566 seconds remaining	BabySnakes has 119.997321 seconds remainingRemaining wealth:	BabySnakes has 100 dollars remaining	BabySnakes has 100 dollars remaining------------------------------------
-Player BabySnakes won t3 on this round 5 with bid amount 2.
-Remaining time:	BabySnakes has 119.99713000000001 seconds remainingRemaining wealth:	BabySnakes has 98 dollars remaining------------------------------------
-Player BabySnakes won t3 on this round 6 with bid amount 2.
-Remaining time:	BabySnakes has 119.994155 seconds remainingRemaining wealth:	BabySnakes has 96 dollars remaining------------------------------------
-Player BabySnakes won t3 on this round 7 with bid amount 2.
-Remaining time:	BabySnakes has 119.99353400000001 seconds remainingRemaining wealth:	BabySnakes has 94 dollars remaining------------------------------------
+Remaining time:	BabySnakes1 has 119.998659 seconds remaining	BabySnakes2 has 119.99554400000001 seconds remainingRemaining wealth:	BabySnakes1 has 100 dollars remaining	BabySnakes2 has 100 dollars remaining------------------------------------

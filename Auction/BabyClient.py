@@ -44,8 +44,9 @@ if __name__ == '__main__':
 
     ip = sys.argv[1]
     port = int(sys.argv[2])
+    name = sys.argv[3]
 
-    client = Client('BabySnakes', (ip, port))
+    client = Client(name, (ip, port))
     atexit.register(client.close)
 
     artists_types = client.artists_types
@@ -69,17 +70,22 @@ if __name__ == '__main__':
     current_round = 0
 
     while True:
-
+        print ("Entered round " + str(current_round))
         ranks = rankArtist(rem_auctions, artists_types, req)
+        print("RANKED")
         bid_amt = calculate_bid(ranks, int(rem_auctions[0][1:]), curr_wealth)
+        print ("BID GENERATED")
         client.make_bid(auction_items[current_round], bid_amt)
-
+        print ("BID SUBMITTED")
         # after sending bid, wait for other player
         game_state = client.receive_round()
-        if game_state['bid_winner'] == 'BabySnakes':
+        print("GAME STATE RECEIVED")
+        if game_state['bid_winner'] == name:
             curr_wealth = curr_wealth - game_state['winning_bid']
             req[int(game_state['bid_item'][1:])] -= 1
+            print("WE WON! UPDATING OUR WEALTH AND REQUIREMENTS!")
         rem_auctions = rem_auctions[1:]
         check_game_status(game_state)
-
+        print("CHECKED IF FINISHED")
         current_round += 1
+        print("PROCEEDING TO ROUND " + str(current_round))

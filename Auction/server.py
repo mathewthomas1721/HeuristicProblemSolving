@@ -16,6 +16,7 @@ def recv_from_client(socket, player, remain_time):
         data = socket.recv(Server.DATA_SIZE).decode('utf-8')
 
         player_bid['bid'] = json.loads(data)
+        print("RECEIVED BID")
         player_bid['received_time'] = datetime.now()
 
     except:
@@ -61,6 +62,7 @@ class Server():
 
     def receive(self, player):
         """Receive a bid from a specific player"""
+        print("RECEIVED BID FROM " + str(player))
         return self.player_sockets[player].recv(self.DATA_SIZE)
 
     def receive_any(self, remain_times):
@@ -72,7 +74,8 @@ class Server():
             bids.append(r)
 
         bids = [b.get() for b in bids]
-
+        print("BIDS FOR THIS ROUND RECEIVED FROM ALL PLAYERS")
+        print(bids)
         return bids
 
     def close(self):
