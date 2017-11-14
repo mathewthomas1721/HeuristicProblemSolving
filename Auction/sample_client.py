@@ -42,6 +42,7 @@ if __name__ == '__main__':
 
     while True:
         bid_amt = calculate_bid(None, wealth)
+        print(bid_amt)
         client.make_bid(auction_items[current_round], bid_amt)
 
         # after sending bid, wait for other player

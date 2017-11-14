@@ -42,7 +42,7 @@ class Client():
         :return: dict of auction round summary
         """
         self.__send_json({'bid_item': bid_item, 'bid_amount': bid_amount})
-
+        #print("BID SENT" + str(bid_item) + " " + str(bid_amount))
     def receive_round(self):
         """
         Receives summary of auction round

@@ -6,15 +6,18 @@ import time
 import random
 
 def rankArtist(auctions, numArtists, req):
-    artistRanks = [0] * numArtists
-    countArtist = [0] * numArtists
-    for i in range(len(auctions)):
-        curr_artist = int(auctions[i][1:])
-        countArtist[curr_artist] += 1
+    allArtistRanks = []
+    for x in range(len(req)):
+        artistRanks = [0] * numArtists
+        countArtist = [0] * numArtists
+        for i in range(len(auctions)):
+            curr_artist = int(auctions[i][1:])
+            countArtist[curr_artist] += 1
 
-        if countArtist[curr_artist] == req[curr_artist]:
-            artistRanks[curr_artist] = i
-    return artistRanks
+            if countArtist[curr_artist] == req[x][curr_artist]:
+                artistRanks[curr_artist] = i
+        allArtistRanks.append(artistRanks)
+    return allArtistRanks
 
 def check_game_status(state):
 
@@ -31,6 +34,9 @@ def check_game_status(state):
         exit(0)
 
 def calculate_bid(ranks,item,curr_wealth):
+    print(ranks)
+    return 1
+    '''
     rank1 = min(ranks)
     if item == ranks.index(rank1):
         if rank1>0:
@@ -39,6 +45,7 @@ def calculate_bid(ranks,item,curr_wealth):
             return curr_wealth
     else:
         return 0
+    '''
 
 if __name__ == '__main__':
 
@@ -56,7 +63,9 @@ if __name__ == '__main__':
     player_count = client.player_count
     curr_wealth = init_wealth
     rem_auctions = auction_items
-    req = [required_count] * artists_types
+    req = []
+    for i in range(player_count):
+        req.append([required_count] * artists_types)
     '''print ("RANKS")
     print(rankArtist(auction_items, artists_types, required_count))'''
     '''print ("artists_types")
@@ -68,24 +77,30 @@ if __name__ == '__main__':
     print ("init_wealth")
     print (init_wealth)'''
     current_round = 0
-
+    playerNameDict = {name:0}
     while True:
-        print ("Entered round " + str(current_round))
+        #print ("Entered round " + str(current_round))
         ranks = rankArtist(rem_auctions, artists_types, req)
-        print("RANKED")
+        #print("RANKED")
         bid_amt = calculate_bid(ranks, int(rem_auctions[0][1:]), curr_wealth)
-        print ("BID GENERATED")
+        #print ("BID GENERATED")
         client.make_bid(auction_items[current_round], bid_amt)
-        print ("BID SUBMITTED")
+        #print ("BID SUBMITTED")
         # after sending bid, wait for other player
         game_state = client.receive_round()
-        print("GAME STATE RECEIVED")
-        if game_state['bid_winner'] == name:
-            curr_wealth = curr_wealth - game_state['winning_bid']
-            req[int(game_state['bid_item'][1:])] -= 1
-            print("WE WON! UPDATING OUR WEALTH AND REQUIREMENTS!")
+        #print("GAME STATE RECEIVED")
+        if game_state['bid_winner'] != None :
+            if game_state['bid_winner'] not in playerNameDict:
+                index = len(playerNameDict)
+                playerNameDict[game_state['bid_winner']] = index
+
+            if game_state['bid_winner'] == name:
+                curr_wealth = curr_wealth - game_state['winning_bid']
+                #print("WE WON! UPDATING OUR WEALTH AND REQUIREMENTS!")
+            print(playerNameDict)
+            req[playerNameDict[game_state['bid_winner']]][int(game_state['bid_item'][1:])] -= 1
         rem_auctions = rem_auctions[1:]
         check_game_status(game_state)
-        print("CHECKED IF FINISHED")
+        #print("CHECKED IF FINISHED")
         current_round += 1
-        print("PROCEEDING TO ROUND " + str(current_round))
+        #print("PROCEEDING TO ROUND " + str(current_round))

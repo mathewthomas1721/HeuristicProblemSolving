@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """
 To start auction game, run this script with the following arguments:
     ./start-game.py [-a <address> | -p <port> | -t <seconds>] m k n
