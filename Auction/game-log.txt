@@ -1,14 +1,16 @@
-Player BabySnakes won t2 on this round 0 with bid amount 1.
-Remaining time:	BabySnakes has 119.999355 seconds remainingRemaining wealth:	BabySnakes has 99 dollars remaining------------------------------------
-Player BabySnakes won t1 on this round 1 with bid amount 1.
-Remaining time:	BabySnakes has 119.99888999999999 seconds remainingRemaining wealth:	BabySnakes has 98 dollars remaining------------------------------------
-Player BabySnakes won t0 on this round 2 with bid amount 1.
-Remaining time:	BabySnakes has 119.99809199999999 seconds remainingRemaining wealth:	BabySnakes has 97 dollars remaining------------------------------------
-Player BabySnakes won t2 on this round 3 with bid amount 1.
-Remaining time:	BabySnakes has 119.99158399999999 seconds remainingRemaining wealth:	BabySnakes has 96 dollars remaining------------------------------------
-Player BabySnakes won t0 on this round 4 with bid amount 1.
-Remaining time:	BabySnakes has 119.98600099999999 seconds remainingRemaining wealth:	BabySnakes has 95 dollars remaining------------------------------------
-Player BabySnakes won t2 on this round 5 with bid amount 1.
-Remaining time:	BabySnakes has 119.98455299999999 seconds remainingRemaining wealth:	BabySnakes has 94 dollars remaining------------------------------------
+Player BabySnakes won t0 on this round 0 with bid amount 14.285714285714286.
+Remaining time:	BabySnakes has 119.999281 seconds remainingRemaining wealth:	BabySnakes has 85.71428571428571 dollars remaining------------------------------------
+No bidder on this round 1.
+Remaining time:	BabySnakes has 119.998864 seconds remainingRemaining wealth:	BabySnakes has 85.71428571428571 dollars remaining------------------------------------
+No bidder on this round 2.
+Remaining time:	BabySnakes has 119.998393 seconds remainingRemaining wealth:	BabySnakes has 85.71428571428571 dollars remaining------------------------------------
+No bidder on this round 3.
+Remaining time:	BabySnakes has 119.998042 seconds remainingRemaining wealth:	BabySnakes has 85.71428571428571 dollars remaining------------------------------------
+No bidder on this round 4.
+Remaining time:	BabySnakes has 119.997612 seconds remainingRemaining wealth:	BabySnakes has 85.71428571428571 dollars remaining------------------------------------
+Player BabySnakes won t0 on this round 5 with bid amount 42.857142857142854.
+Remaining time:	BabySnakes has 119.99732 seconds remainingRemaining wealth:	BabySnakes has 42.857142857142854 dollars remaining------------------------------------
+Player BabySnakes won t0 on this round 6 with bid amount 42.857142857142854.
+Remaining time:	BabySnakes has 119.996874 seconds remainingRemaining wealth:	BabySnakes has 0.0 dollars remaining------------------------------------
 Game over
 Player BabySnakes won the game! Congrats!

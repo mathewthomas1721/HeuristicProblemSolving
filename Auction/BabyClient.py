@@ -15,7 +15,7 @@ def rankArtist(auctions, numArtists, req):
             countArtist[curr_artist] += 1
 
             if countArtist[curr_artist] == req[x][curr_artist]:
-                artistRanks[curr_artist] = i
+                artistRanks[curr_artist] = i+1
         allArtistRanks.append(artistRanks)
     return allArtistRanks
 
@@ -33,19 +33,49 @@ def check_game_status(state):
         print('Game over\n{}\n'.format(state['reason']))
         exit(0)
 
-def calculate_bid(ranks,item,curr_wealth):
-    print(ranks)
-    return 1
-    '''
-    rank1 = min(ranks)
-    if item == ranks.index(rank1):
-        if rank1>0:
-            return int(curr_wealth/rank1)
+def calculate_bid(ranks,item,curr_wealth, req):
+    #print(curr_wealth)
+    ourPlayer = ranks[0]
+    rank1 = min(ourPlayer)
+    ourRank1 = ourPlayer.index(rank1)
+    #print ("Smallest Rank = " + str(rank1) + " for artist " + str(ourRank1))
+
+    #if len(ranks) == 1:
+    if item == ourRank1:
+        if len(ranks) > 1:
+            ranks = ranks[1:]
+            ranks1 = []
+            for x in ranks:
+                ranks1.append(x.index(min(x)))
+            indices = [i for i, x in enumerate(ranks1) if x == ourRank1]
+            # all players (-1 index) whom we will be trying to outbid
+            if len(indices)>0: # If there are any other players who want the item, outbid them
+                maxProbableBid = 0
+                for i in indices :
+                    likelyBid = int(curr_wealth[i+1]/req[i+1][ourRank1])
+                    print("HOW MUCH THEY CAN SPEND : " + str(curr_wealth[i+1]) + "\nHOW MANY THEY NEED : " + str(req[i+1][ourRank1]))
+                    #likelyBid is how much they're likely to bid
+                    if maxProbableBid < likelyBid:
+                        maxProbableBid = likelyBid
+                print("MAX PROBABLE BID = " + str(maxProbableBid))
+                if maxProbableBid + 1 > int(curr_wealth[0]/2):
+                    print("TOO HIGH, NOT BIDDING ")
+                    return 0
+                else:
+                    print("OUR BID = " + str(maxProbableBid + 1) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
+                    return maxProbableBid + 1
+            else: #otherwise place our standard bid
+                print("OUR BID = " + str(int(curr_wealth[0]/req[0][ourRank1])) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
+                return int(curr_wealth[0]/req[0][ourRank1])
         else :
-            return curr_wealth
+                pprint("OUR BID = " + str(int(curr_wealth[0]/req[0][ourRank1])) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
+                return int(curr_wealth[0]/req[0][ourRank1])
     else:
         return 0
-    '''
+
+
+
+
 
 if __name__ == '__main__':
 
@@ -61,7 +91,7 @@ if __name__ == '__main__':
     auction_items = client.auction_items
     init_wealth = client.init_wealth
     player_count = client.player_count
-    curr_wealth = init_wealth
+    curr_wealth = [init_wealth] * player_count
     rem_auctions = auction_items
     req = []
     for i in range(player_count):
@@ -79,10 +109,11 @@ if __name__ == '__main__':
     current_round = 0
     playerNameDict = {name:0}
     while True:
+        print("OUR CURRENT WEALTH = " + str(curr_wealth[0]))
         #print ("Entered round " + str(current_round))
         ranks = rankArtist(rem_auctions, artists_types, req)
         #print("RANKED")
-        bid_amt = calculate_bid(ranks, int(rem_auctions[0][1:]), curr_wealth)
+        bid_amt = calculate_bid(ranks, int(rem_auctions[0][1:]), curr_wealth, req)
         #print ("BID GENERATED")
         client.make_bid(auction_items[current_round], bid_amt)
         #print ("BID SUBMITTED")
@@ -94,10 +125,10 @@ if __name__ == '__main__':
                 index = len(playerNameDict)
                 playerNameDict[game_state['bid_winner']] = index
 
-            if game_state['bid_winner'] == name:
-                curr_wealth = curr_wealth - game_state['winning_bid']
+            #if game_state['bid_winner'] == name:
+            curr_wealth[playerNameDict[game_state['bid_winner']]] -= game_state['winning_bid']
                 #print("WE WON! UPDATING OUR WEALTH AND REQUIREMENTS!")
-            print(playerNameDict)
+            #print(playerNameDict)
             req[playerNameDict[game_state['bid_winner']]][int(game_state['bid_item'][1:])] -= 1
         rem_auctions = rem_auctions[1:]
         check_game_status(game_state)
