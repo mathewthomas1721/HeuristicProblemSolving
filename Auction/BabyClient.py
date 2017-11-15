@@ -4,6 +4,7 @@ import sys
 from client import Client
 import time
 import random
+import math
 
 def rankArtist(auctions, numArtists, req):
     allArtistRanks = []
@@ -52,7 +53,7 @@ def calculate_bid(ranks,item,curr_wealth, req):
             if len(indices)>0: # If there are any other players who want the item, outbid them
                 maxProbableBid = 0
                 for i in indices :
-                    likelyBid = int(curr_wealth[i+1]/req[i+1][ourRank1])
+                    likelyBid = math.ceil(curr_wealth[i+1]/req[i+1][ourRank1])
                     print("HOW MUCH THEY CAN SPEND : " + str(curr_wealth[i+1]) + "\nHOW MANY THEY NEED : " + str(req[i+1][ourRank1]))
                     #likelyBid is how much they're likely to bid
                     if maxProbableBid < likelyBid:
@@ -66,10 +67,10 @@ def calculate_bid(ranks,item,curr_wealth, req):
                     return maxProbableBid + 1
             else: #otherwise place our standard bid
                 print("OUR BID = " + str(int(curr_wealth[0]/req[0][ourRank1])) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
-                return int(curr_wealth[0]/req[0][ourRank1])
+                return math.ceil(curr_wealth[0]/req[0][ourRank1])
         else :
                 pprint("OUR BID = " + str(int(curr_wealth[0]/req[0][ourRank1])) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
-                return int(curr_wealth[0]/req[0][ourRank1])
+                return math.ceil(curr_wealth[0]/req[0][ourRank1])
     else:
         return 0
 
