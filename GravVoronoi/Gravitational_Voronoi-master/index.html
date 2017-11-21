@@ -1,0 +1,363 @@
+<html>
+  <header>
+    <title>Gravitational Voronoi</title>
+  </header>
+  <style>
+  body {
+    background: #e8e8e8;
+    font-family: "Open Sans", Arial, sans-serif;
+    color: #464646;
+    padding: 0;
+    margin: 0;
+  }
+
+  h1 {
+    width: 100%;
+    color: #464646;
+    font-size: 34px;
+    letter-spacing: 1px;
+    line-height: 80px;
+    height: 80px;
+    margin: auto;
+    text-align: center;
+    border-bottom: 1px solid #464646;
+  }
+
+  #container {
+    display: flex;
+    margin-top: 80px;
+    justify-content: center;
+  }
+
+  #info-container {
+    font-size: 20px;
+    margin-right: 50px;
+  }
+
+  #info-container h3 {
+    color: #464646;
+    font-size: 26px;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #666666;
+    height: 40px;
+  }
+
+  #player-info .player-info-container {
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #666666;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #player-info .player-info-container div {
+    margin: 0 10px;
+  }
+
+  #player-info .player-color {
+    height: 28px;
+    width: 28px;
+  }
+
+  #time-taken {
+    padding-top: 100px;
+  }
+
+  #clock {
+    font-size: 54px;
+    text-align: center;
+    padding-top: 30px;
+  }
+
+  #game-over {
+    font-size: 50px;
+    text-align: center;
+    padding-top: 50px;
+  }
+
+  #canvas {
+    border: 1px solid #464646;
+    height: 700px;
+    width: 700px;
+  }
+
+  </style>
+  <body>
+    <h1>
+      Gravitational Voronoi
+    </h1>
+    <div id="container">
+      <div id="info-container">
+        <h3>Players</h3>
+        <div id="player-info"></div>
+        <div id="time-taken">
+          <h3>Current Move Time</h3>
+          <div id="clock">0.00</div>
+        </div>
+        <div id="game-over"></div>
+      </div>
+      <canvas id="canvas" width="1000" height="1000">
+        Your browser does not support the HTML5 canvas tag.
+      </canvas>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      var socket = io("127.0.0.1:10000");
+
+      var canvas = document.getElementById('canvas');
+      var canvasWidth = canvas.width;
+      var canvasHeight = canvas.height;
+      var boardSize = canvasWidth;
+      var ctx = canvas.getContext('2d');
+      var initiated = false;
+      var totalScores = [];
+      var lastScores = [];
+
+      var colors = ['red', 'blue', 'green', 'orange', 'yellow', 'purple',
+          'silver', 'olive', 'teal'];
+
+      var colorRGB = [[255,0,0], [0,0,255], [0,255,0], [255,165,0],
+          [255,255,0], [128,0,128], [192,192,192],
+          [128,128,0], [0,128,128]];
+
+      var moves = [];
+
+      var clockInterval;
+      var clockStart;
+
+      function drawStones(boardData) {
+        var board = boardData.split(" ");
+        var j = parseInt(board[board.length - 1]);
+        var i = parseInt(board[board.length - 2]);
+        var currentTurn = parseInt(board[board.length - 3]);
+
+        moves[currentTurn - 1].push([j, i]);
+
+        for(var b = 0 ; b < moves.length ; b++)
+        {
+          for(var a = 0 ; a < moves[b].length ; a++)
+          {
+            var centerX = moves[b][a][0];
+            var centerY = moves[b][a][1];
+            var radius = 10;
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+
+            var color = colors[b];
+
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#003300';
+            ctx.stroke();
+          }
+        }
+      }
+
+      function decompressBitmap(boardData) {
+        const numericBoard = boardData.split(" ").map(Number);
+        const decompressedBoard = [];
+        let i = 0;
+        for (let j = 0;; j += 3) {
+          for (let k = numericBoard[j]; k <= numericBoard[j + 1]; k++) {
+            decompressedBoard.push(numericBoard[j + 2]);
+          }
+          if (numericBoard[j + 1] === 999) {
+            i += 1
+            if (i === 1000) {
+              break;
+            }
+          }
+        }
+        return decompressedBoard;
+      }
+
+      function drawBoard(boardData) {
+        var board = boardData.split(" ");
+        var j = parseInt(board[board.length - 1]);
+        var i = parseInt(board[board.length - 2]);
+        var numberOfPlayers = parseInt([board[board.length - 4]]);
+        board = decompressBitmap(boardData);
+
+        if (moves.length == 0)
+        {
+          for(var i = 0 ; i < numberOfPlayers ; i++)
+          {
+            moves.push([]);
+          }
+        }
+
+        var imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+        var data = imageData.data;
+
+
+        for (var y = 0; y < 1000; y++)
+        {
+          for (var x = 0; x < 1000; x++)
+          {
+            var index = (y * 1000 + x) * 4;
+
+            var player = parseInt(board[index/4]);
+
+            if(player > 0)
+            {
+              var gridColor = colorRGB[player - 1];
+
+              data[index]   = gridColor[0];
+              data[++index] = gridColor[1];
+              data[++index] = gridColor[2];
+              data[++index] = 125;
+            }
+          }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      function getInfoComponent(name, index) {
+        var infoComponent = document.createElement('div');
+        var nameComponent = document.createElement('div');
+        var colorComponent = document.createElement('div');
+        var scoreComponent = document.createElement('div');
+        var totalScoreComponent = document.createElement('div');
+        var timeComponent = document.createElement('div');
+
+        infoComponent.classList.add('player-info-container')
+        infoComponent.setAttribute('player-id', index.toString());
+        nameComponent.classList.add('player-name');
+        nameComponent.textContent = name;
+        colorComponent.classList.add('player-color');
+        colorComponent.style.background = colors[index];
+        scoreComponent.classList.add('player-score');
+        scoreComponent.textContent = '0';
+        totalScoreComponent.classList.add('total-player-score');
+        totalScoreComponent.textContent = '0';
+        timeComponent.classList.add('player-time');
+        timeComponent.textContent = '120s';
+
+        infoComponent.appendChild(colorComponent);
+        infoComponent.appendChild(nameComponent);
+        infoComponent.appendChild(timeComponent);
+        infoComponent.appendChild(scoreComponent);
+        infoComponent.appendChild(totalScoreComponent);
+
+        return infoComponent;
+      }
+
+      function resetClock(shouldClearInterval = false) {
+        if (shouldClearInterval) {
+          clearInterval(clockInterval);
+        }
+        document.querySelector('#clock').textContent = '0.00';
+        clockStart = new Date().getTime();
+        clockInterval = setInterval(() => {
+          let timeTaken = new Date().getTime() - clockStart;
+          timeTaken /= 1000;
+          document.querySelector('#clock').textContent = timeTaken.toFixed(2);
+        }, 100);
+      }
+
+      function init(names) {
+        var nameArr = names.split('"NAME_SEPARATOR"');
+        var infoDiv = document.getElementById('player-info');
+        for (var i = 0; i < nameArr.length; i++) {
+          infoDiv.appendChild(getInfoComponent(nameArr[i], i));
+          totalScores.push(0);
+        }
+        resetClock(false);
+      }
+
+      function updatePlayers(boardData) {
+        var board = boardData.split(" ");
+        var numberOfPlayers = parseInt([board[board.length - 4]]);
+        var scores = board.slice(board.length - 4 - numberOfPlayers, board.length - 4);
+        var times = board.slice(board.length - 4 - 2 * numberOfPlayers, board.length - 4 - numberOfPlayers);
+        var playerInfo = document.querySelectorAll('#player-info .player-info-container');
+        var totalRoundScore = 0;
+        scores.forEach(function(singleScore) {
+          totalRoundScore += parseInt(singleScore, 10);
+        });
+        var tempTotalScores = totalScores.map(function(singleScore, i) {
+          return singleScore + parseInt(scores[i], 10);
+        });
+        var totalScore = 0;
+        tempTotalScores.forEach(function(singleScore) {
+          totalScore += singleScore;
+        });
+        playerInfo.forEach(function(info) {
+          var i = parseInt(info.getAttribute('player-id'));
+          var percentageRoundScore = (100 * parseInt(scores[i], 10) / totalRoundScore).toFixed(1);
+          var percentageScore = (100 * tempTotalScores[i] / totalScore).toFixed(1);
+          info.querySelector('.player-score').textContent = `${percentageRoundScore}%`;
+          info.querySelector('.total-player-score').textContent = `${percentageScore}%`;
+          info.querySelector('.player-time').textContent = times[i] + 's';
+        });
+        lastScores = scores.map(function(singleScore) {return parseInt(singleScore, 10)});
+      }
+
+      function softReset() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        moves = [];
+        document.querySelector('#game-over').textContent = "";
+      }
+
+      function resetBoard() {
+        initiated = false;
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        moves = [];
+        totalScores = [];
+        lastScores = [];
+        document.getElementById('player-info').innerHTML = "";
+        document.querySelector('#game-over').textContent = "";
+      }
+
+      function endGame() {
+        clearInterval(clockInterval);
+        document.querySelector('#clock').textContent = '0.00';
+        document.querySelector('#game-over').textContent = 'Game Over';
+        totalScores = totalScores.map(function(singleScore, i) {
+          return singleScore + lastScores[i];
+        });
+        var oReq = new XMLHttpRequest();
+        oReq.open('POST', '/artwork');
+        oReq.setRequestHeader('Content-Type', 'text/plain');
+        oReq.send(canvas.toDataURL());
+      }
+
+      var buffer = '';
+
+      socket.on('to_client', function(data)
+        {
+          buffer += data;
+          if (buffer[buffer.length - 1] == '\n') {
+            // We know it's the end of the message
+            // Remove the newline character
+            buffer = buffer.slice(0, -1);
+            if (buffer === 'reset') {
+              resetBoard();
+            } else if (!initiated) {
+              init(buffer);
+              initiated = true;
+            } else if (buffer === 'soft-reset') {
+              softReset();
+            } else if (buffer === 'game over') {
+              endGame();
+            } else {
+              // Drawing data
+              drawBoard(buffer);
+              drawStones(buffer);
+              updatePlayers(buffer);
+              resetClock(true);
+            }
+            // Reset buffer for next message
+            buffer = '';
+          }
+        });
+    </script>
+  </body>
+</html>

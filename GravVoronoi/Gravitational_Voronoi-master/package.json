@@ -1,0 +1,22 @@
+{
+  "name": "gravitational_voronoi",
+  "version": "1.0.0",
+  "description": "Gravitational Voronoi for NYU Heuristic Problem Solving graduate course in CS",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guyu96/Gravitational_Voronoi.git"
+  },
+  "author": "Originally written by Anurag Dhaipule and Hassan Mujtaba Zaidi, upgraded by Guyu Fan and Emil Goldsmith Olesen",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/guyu96/Gravitational_Voronoi/issues"
+  },
+  "homepage": "https://github.com/guyu96/Gravitational_Voronoi#readme",
+  "dependencies": {
+    "socket.io": "^2.0.3"
+  }
+}
