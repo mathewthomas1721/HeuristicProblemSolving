@@ -2,7 +2,7 @@ import socket, time, random, sys, math, copy
 import numpy as np
 import Grav_Voronoi
 
-N = 90
+N = 10
 
 class Client:
   def __init__(self, host, port, name):
@@ -18,26 +18,27 @@ class Client:
     # connect to server and get game info
     self.sock.connect((host, port))
     self.num_players, self.num_stone, self.player_number = map(int, self.__receive_move())
-    self.score_grid = np.zeros((self.grid_size, self.grid_size), dtype=np.int)
-    self.pull = np.zeros((self.num_players, self.grid_size, self.grid_size), dtype=np.float32)
 
-    self.row_numbers = np.zeros((self.grid_size, self.grid_size), dtype=np.float32)
-    for i in range(self.grid_size):
-      self.row_numbers[i] = self.row_numbers[i] + i
-    self.col_numbers = np.transpose(self.row_numbers)
-    self.scores = [0] * self.num_players
 
-    self.moves = [] # store history of moves
-
-    self.__fillOffsets(N)
-    
     # send name to serer
     self.__send(self.name)
     print("Client initialized")
+  def reset(self):
+      self.score_grid = np.zeros((self.grid_size, self.grid_size), dtype=np.int)
+      self.pull = np.zeros((self.num_players, self.grid_size, self.grid_size), dtype=np.float32)
 
+      self.row_numbers = np.zeros((self.grid_size, self.grid_size), dtype=np.float32)
+      for i in range(self.grid_size):
+        self.row_numbers[i] = self.row_numbers[i] + i
+      self.col_numbers = np.transpose(self.row_numbers)
+      self.scores = [0] * self.num_players
+
+      self.moves = [] # store history of moves
+
+      self.__fillOffsets(N)
   def __receive(self):
     return self.sock.recv(2048).decode('utf-8')
-  
+
   def __send(self, string):
     self.sock.sendall(string.encode('utf-8'))
 
@@ -62,7 +63,7 @@ class Client:
     # This value would otherwise have been 0 and would therefore have caused an exception when taking the reciprocal
     squared_distance_matrix[row][col] = 0.1e-30
     # After taking the reciprocal it correctly indicates the pull added at at (i, j) by having a stone at (row, col)
-    return np.reciprocal(squared_distance_matrix)    
+    return np.reciprocal(squared_distance_matrix)
 
 
   def __update_scores(self, move_row, move_col, player):
@@ -327,16 +328,17 @@ class Client:
       move_col = random.randint(0, 999)
       if (self.__is_valid_move(move_row, move_col)):
         break
-    
+
     return move_row, move_col
-  
+
   def start(self):
     while True:
       move_data = self.__receive_move()
       # check if game is over
       if int(move_data[0]) == 1:
         print("Game over")
-        break
+        return 1;
+
 
       # scores
       scores = []
@@ -348,7 +350,7 @@ class Client:
       # sanity check
       if num_new_moves * 3 != len(new_moves):
         print("Error: error parsing list of new moves")
-      
+
       # insert new moves into the grid
       for i in range(num_new_moves):
         move_row = int(new_moves[3 * i])
@@ -372,13 +374,17 @@ class Client:
       self.moves.append((my_move_row, my_move_col, self.player_number))
       self.__send_move(my_move_row, my_move_col)
       print("Played at row {}, col {}".format(my_move_row, my_move_col))
-    
+
     self.sock.close()
 
 if (__name__ == "__main__"):
+
   host = sys.argv[1]
   port = int(sys.argv[2])
   name = sys.argv[3]
   # note: whoever connects to the server first plays first
   client = Client(host, port, name)
-  client.start()
+
+  for i in range(client.num_players):
+      client.reset()
+      client.start()
