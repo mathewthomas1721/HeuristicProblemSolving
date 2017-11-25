@@ -64,7 +64,7 @@ def calculate_bid(ranks,item,curr_wealth, req):
                     return 0
                 else:
                     print("OUR BID = " + str(maxProbableBid + 1) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
-                    return maxProbableBid + 1
+                    return maxProbableBid
             else: #otherwise place our standard bid
                 print("OUR BID = " + str(int(curr_wealth[0]/req[0][ourRank1])) + " with a CURR_WEALTH = " + str(curr_wealth[0]) + " and " +str(req[0][ourRank1]) + " paintings needed")
                 return math.ceil(curr_wealth[0]/req[0][ourRank1])

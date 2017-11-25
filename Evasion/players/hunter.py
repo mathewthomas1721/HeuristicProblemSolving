@@ -219,7 +219,7 @@ def strat1(game):
     delWalls = ""
     #print len(findRestrictedArea(game.preyXPos,game.preyYPos,game.wallEqns))
     if movingToward(game):
-        newWall = random.randint(1,4)
+        newWall = random.randint(1,2)
         newWallEqn = lineEqn(game.hunterXPos,game.hunterYPos,newWall-1)
         xPos = game.hunterXPos + game.hunterXVel
         yPos = game.hunterYPos + game.hunterYVel
@@ -251,7 +251,7 @@ def strat2(game):
     bestWall = 0
     bestWallEqn = 0
     delWalls = ""
-    for i in range(4):
+    for i in range(2):
         wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
         #print str(i) + " " + str(wallEqn)
         dist = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)
@@ -291,7 +291,7 @@ def strat3(game):
     bestWallEqn = 0
     delWalls = ""
 
-    for i in range(4):
+    for i in range(2):
         wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
         #print str(i) + " " + str(wallEqn)
         dist1 = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)
@@ -345,7 +345,7 @@ def strat5(game):
     bestWallEqn = 0
     delWalls = ""
 
-    for i in range(4):
+    for i in range(2):
         wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
         #print str(i) + " " + str(wallEqn)
         dist1 = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)

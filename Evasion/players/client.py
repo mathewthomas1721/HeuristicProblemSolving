@@ -6,7 +6,7 @@ import time
 import random
 import hunter
 
-host = "172.16.42.248"
+host = "127.0.0.1"
 port = int(sys.argv[1])
 strat = int(sys.argv[2])
 
