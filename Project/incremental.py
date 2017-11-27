@@ -32,10 +32,31 @@ class Upgrade:
         self.cost = cost
         self.mult = mult
 
-class Player:
+class Penalty:
+    def __init__(self,pen):
+        self.name = pen[0]
+        if pen[1] == 0:
+            self.type = 0
+            self.prop = pen[2]
+            self.mult = pen[3]
+        elif pen[1] == 1:
+            self.type = 1
+            self.mult = pen[2]
+            self.duration = pen[3]
+            self.time_left = self.duration
+        else:
+            self.name = "Florg"
+
+
+
+
+class Game:
     def __init__(self, props, upgrades):
+        self.counter = 0
         self.currency = 10.0
+        self.pen_count = 0
         self.properties = []
+        self.global_multiplier = 1.0
         for prop in props:
             self.properties.append(Property(prop[0], prop[1], prop[2], prop[3]))
         for ug in upgrades:
@@ -61,8 +82,52 @@ class Player:
         return False
 
     def cycle(self):
+        self.counter += 1
         for prop in self.properties:
-            self.currency += prop.total_income
+            self.currency += prop.total_income * self.global_multiplier
+
+
+class Two_Player_Game(Game):
+    def __init__(self, props, upgrades, penalties):
+        Game.__init__(self, props, upgrades)
+        self.penalties = []
+        self.active_penalties = []
+        for pen in penalties:
+            self.penalties.append(Penalty(pen))
+        for prop in self.properties:
+            prop.mult = 1.0
+
+    def buy_prop(self, prop_to_buy):
+        succeed = Game.buy_prop(self, prop_to_buy)
+        if succeed:
+            self.pen_count += 1
+
+    def cycle(self):
+        Game.cycle(self)
+        if self.counter % 25 == 0:
+            self.pen_count += 1
+        new_active = self.active_penalties
+        self.active_penalties = []
+        for pen in self.active_penalties:
+            pen.time_left -= 1
+            if pen.time_left == 0:
+                self.global_multiplier *= (1.0 / pen.mult)
+                pen.time_left = pen.duration
+            else:
+                self.active_penalties.append(pen)
+
+
+    def applyPenalty(self, pen_no):
+        if self.pen_count > 0:
+            self.pen_count -= 1
+            pen = self.penalties[pen_no]
+            pen.name = "florg1"
+            if pen.type == 0:
+                self.properties[pen.prop].cost *= pen.mult
+            elif pen.type == 1:
+                self.active_penalties.append(pen)
+                self.global_multiplier *= pen.mult
+
 
 class incremental:
 
@@ -97,30 +162,55 @@ class incremental:
         ('Upgrade 1', 0, 10, 2.0),
         ('Upgrade 1', 1, 10, 2.0),       
     ]]
+
+    penalties = [list (tupl) for tupl in [ 
+        ('Cost Increase 1', 0, 0, 1.15),
+        ('Cost Increase 2', 0, 1, 1.15),
+        ('Cost Increase 3', 0, 2, 1.15),
+        ('Cost Increase 4', 0, 3, 1.15),
+        ('Cost Increase 5', 0, 4, 1.15),
+        ('Cost Increase 6', 0, 5, 1.15),
+        ('Cost Increase 7', 0, 6, 1.15),
+        ('Cost Increase 8', 0, 7, 1.15),
+        ('Penalty 1', 1, 0.5, 100),
+  
+    ]]
         
         
-    def __init__ (self):
+    def __init__ (self, two_player):
         window.setInterval(self.Update, 500)
-        self.player = Player(self.properties, self.upgrades)
+        if two_player:
+            self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
+        else:
+            self.gm = Game(self.properties, self.upgrades)
         
         
     def BuyProp(self, n):
-        self.player.buy_prop(n - 1)
-        prop = self.player.properties[n-1]
+        self.gm.buy_prop(n - 1)
+        prop = self.gm.properties[n-1]
         document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.player.currency))
+        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
             
 
     def UpgradeProp(self, n):
-        self.player.upgrade_prop(n - 1)
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.player.currency))
+        self.gm.upgrade_prop(n - 1)
+        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
+
+    def ApplyPenalty(self, n):
+        self.gm.applyPenalty(n - 1)
+        document.getElementById ('adv1') .innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format(self.gm.pen_count, self.gm.penalties[0].name)
+        for n in [1,2,3,4,5,6,7,8]:
+            prop = self.gm.properties[n-1]
+            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
+
 
 
     def Update (self):
-        self.player.cycle()
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.player.currency))
+        self.gm.cycle()
+        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
+        document.getElementById ('adv1') .innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format(self.gm.pen_count, self.gm.penalties[0].name)
         for n in [1,2,3,4,5,6,7,8]:
-            prop = self.player.properties[n-1]
+            prop = self.gm.properties[n-1]
             document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
 
 
@@ -128,5 +218,5 @@ class incremental:
 
 
             
-game = incremental ()
+game = incremental (True)
     
