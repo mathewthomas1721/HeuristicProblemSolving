@@ -21,9 +21,16 @@ class Property:
         self.count += 1
         self.total_income = self.count * self.income
 
+    def get_next_upgrade(self):
+        return self.upgrades_Available[0]
+
     def upgrade(self):
-        ug = self.upgrades_Available.pop(0)
+        ug = self.upgrades_Available[0]
         self.income *= ug.mult
+        if len(self.upgrades_Available) == 1:
+            ug.cost *= 10
+        else:
+            self.upgrades_Available.pop(0)
         self.total_income = self.count * self.income
 
 class Upgrade:
@@ -143,24 +150,14 @@ class incremental:
     ]]
 
     upgrades = [list (tupl) for tupl in [ 
-        ('Upgrade 1', 0, 10, 2.0),
-        ('Upgrade 1', 1, 10, 2.0),
-        ('Upgrade 1', 2, 10, 2.0),
-        ('Upgrade 1', 3, 10, 2.0),
-        ('Upgrade 1', 4, 10, 2.0),
-        ('Upgrade 1', 5, 10, 2.0),
-        ('Upgrade 1', 6, 10, 2.0),
-        ('Upgrade 1', 7, 10, 2.0),
-        ('Upgrade 1', 0, 10, 2.0),
-        ('Upgrade 1', 1, 10, 2.0),
-        ('Upgrade 1', 2, 10, 2.0),
-        ('Upgrade 1', 3, 10, 2.0),
-        ('Upgrade 1', 4, 10, 2.0),
-        ('Upgrade 1', 5, 10, 2.0),
-        ('Upgrade 1', 6, 10, 2.0),
-        ('Upgrade 1', 7, 10, 2.0),
-        ('Upgrade 1', 0, 10, 2.0),
-        ('Upgrade 1', 1, 10, 2.0),       
+        ('Better Burgers', 0, 10, 2.0),
+        ('Saltier Fries', 1, 10, 2.0),
+        ('Premium Gas', 2, 10, 2.0),
+        ('Cheaper Labor', 3, 10, 2.0),
+        ('Subprime Mortgage', 4, 10, 2.0),
+        ('New Advertising Campaign', 5, 10, 2.0),
+        ('Cheat Safety Regulations', 6, 10, 2.0),
+        ('Outsourcing', 7, 10, 2.0),     
     ]]
 
     penalties = [list (tupl) for tupl in [ 
@@ -178,7 +175,8 @@ class incremental:
         
         
     def __init__ (self, two_player):
-        window.setInterval(self.Update, 500)
+        window.setInterval(self.Update, 1000)
+        self.two_player = two_player
         if two_player:
             self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
         else:
@@ -188,35 +186,65 @@ class incremental:
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
+        if (prop.cost > 1000000):
+            pcost = prop.cost.toExponential(3)
+        else:
+            pcost = prop.cost.toFixed(0)
+        document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, pcost)
+        if (self.gm.currency < 1000000):
+            curr = self.gm.currency.toFixed(0)
+        else:
+            curr = self.gm.currency.toExponential(3)
+        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(curr)
+        document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, prop.total_income)
             
 
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
+        if (self.gm.currency < 1000000):
+            curr = self.gm.currency.toFixed(0)
+        else:
+            curr = self.gm.currency.toExponential(3)
+        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(curr)
+        ug = prop.get_next_upgrade()
+        document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, ug.cost, prop.name, ug.mult)
+
 
     def ApplyPenalty(self, n):
         self.gm.applyPenalty(n - 1)
         document.getElementById ('adv1') .innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format(self.gm.pen_count, self.gm.penalties[0].name)
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
-            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
-
+            if (prop.cost > 1000000):
+                pcost = prop.cost.toExponential(3)
+            else:
+                pcost = prop.cost.toFixed(0)
+            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, pcost)
 
 
     def Update (self):
         self.gm.cycle()
-        document.getElementById('cash').innerHTML = 'Total Cash: {}'.format(int(self.gm.currency))
-        document.getElementById ('adv1') .innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format(self.gm.pen_count, self.gm.penalties[0].name)
+        if (self.gm.currency < 1000000):
+            curr = self.gm.currency.toFixed(0)
+        else:
+            curr = self.gm.currency.toExponential(3)
+        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(curr)
+        if self.two_player:
+            document.getElementById ('adv1') .innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format(self.gm.pen_count, self.gm.penalties[0].name)
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
-            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.name, int(prop.cost))
-
+            if (prop.cost > 1000000):
+                pcost = prop.cost.toExponential(3)
+            else:
+                pcost = prop.cost.toFixed(0)
+            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, pcost)
+            document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, prop.total_income)
+            ug = prop.get_next_upgrade()
+            document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, ug.cost, prop.name, ug.mult)
 
 
 
 
             
-game = incremental (True)
+game = incremental (False)
     
