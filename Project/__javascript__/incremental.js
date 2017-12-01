@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-26 19:58:54
+// Transcrypt'ed from Python, 2017-11-30 19:41:38
 function incremental () {
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2487,9 +2487,18 @@ function incremental () {
 				self.count++;
 				self.total_income = self.count * self.income;
 			});},
+			get get_next_upgrade () {return __get__ (this, function (self) {
+				return self.upgrades_Available [0];
+			});},
 			get upgrade () {return __get__ (this, function (self) {
-				var ug = self.upgrades_Available.py_pop (0);
+				var ug = self.upgrades_Available [0];
 				self.income *= ug.mult;
+				if (len (self.upgrades_Available) == 1) {
+					ug.cost *= 10;
+				}
+				else {
+					self.upgrades_Available.py_pop (0);
+				}
 				self.total_income = self.count * self.income;
 			});}
 		});
@@ -2635,7 +2644,7 @@ function incremental () {
 			} (),
 			upgrades: function () {
 				var __accu0__ = [];
-				var __iterable0__ = list ([tuple (['Upgrade 1', 0, 10, 2.0]), tuple (['Upgrade 1', 1, 10, 2.0]), tuple (['Upgrade 1', 2, 10, 2.0]), tuple (['Upgrade 1', 3, 10, 2.0]), tuple (['Upgrade 1', 4, 10, 2.0]), tuple (['Upgrade 1', 5, 10, 2.0]), tuple (['Upgrade 1', 6, 10, 2.0]), tuple (['Upgrade 1', 7, 10, 2.0]), tuple (['Upgrade 1', 0, 10, 2.0]), tuple (['Upgrade 1', 1, 10, 2.0]), tuple (['Upgrade 1', 2, 10, 2.0]), tuple (['Upgrade 1', 3, 10, 2.0]), tuple (['Upgrade 1', 4, 10, 2.0]), tuple (['Upgrade 1', 5, 10, 2.0]), tuple (['Upgrade 1', 6, 10, 2.0]), tuple (['Upgrade 1', 7, 10, 2.0]), tuple (['Upgrade 1', 0, 10, 2.0]), tuple (['Upgrade 1', 1, 10, 2.0])]);
+				var __iterable0__ = list ([tuple (['Better Burgers', 0, 10, 2.0]), tuple (['Saltier Fries', 1, 10, 2.0]), tuple (['Premium Gas', 2, 10, 2.0]), tuple (['Cheaper Labor', 3, 10, 2.0]), tuple (['Subprime Mortgage', 4, 10, 2.0]), tuple (['New Advertising Campaign', 5, 10, 2.0]), tuple (['Cheat Safety Regulations', 6, 10, 2.0]), tuple (['Outsourcing', 7, 10, 2.0])]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var tupl = __iterable0__ [__index0__];
 					__accu0__.append (list (tupl));
@@ -2652,7 +2661,8 @@ function incremental () {
 				return __accu0__;
 			} (),
 			get __init__ () {return __get__ (this, function (self, two_player) {
-				window.setInterval (self.Update, 500);
+				window.setInterval (self.Update, 1000);
+				self.two_player = two_player;
 				if (two_player) {
 					self.gm = Two_Player_Game (self.properties, self.upgrades, self.penalties);
 				}
@@ -2663,12 +2673,33 @@ function incremental () {
 			get BuyProp () {return __get__ (this, function (self, n) {
 				self.gm.buy_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
-				document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.py_name, int (prop.cost));
-				document.getElementById ('cash').innerHTML = 'Total Cash: {}'.format (int (self.gm.currency));
+				if (prop.cost > 1000000) {
+					var pcost = prop.cost.toExponential (3);
+				}
+				else {
+					var pcost = prop.cost.toFixed (0);
+				}
+				document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.py_name, pcost);
+				if (self.gm.currency < 1000000) {
+					var curr = self.gm.currency.toFixed (0);
+				}
+				else {
+					var curr = self.gm.currency.toExponential (3);
+				}
+				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (curr);
+				document.getElementById ('tt' + str (n)).innerHTML = 'Your {}s are producing ${} per second.'.format (prop.py_name, prop.total_income);
 			});},
 			get UpgradeProp () {return __get__ (this, function (self, n) {
 				self.gm.upgrade_prop (n - 1);
-				document.getElementById ('cash').innerHTML = 'Total Cash: {}'.format (int (self.gm.currency));
+				if (self.gm.currency < 1000000) {
+					var curr = self.gm.currency.toFixed (0);
+				}
+				else {
+					var curr = self.gm.currency.toExponential (3);
+				}
+				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (curr);
+				var ug = prop.get_next_upgrade ();
+				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format (ug.py_name, ug.cost, prop.py_name, ug.mult);
 			});},
 			get ApplyPenalty () {return __get__ (this, function (self, n) {
 				self.gm.applyPenalty (n - 1);
@@ -2677,18 +2708,41 @@ function incremental () {
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var n = __iterable0__ [__index0__];
 					var prop = self.gm.properties [n - 1];
-					document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.py_name, int (prop.cost));
+					if (prop.cost > 1000000) {
+						var pcost = prop.cost.toExponential (3);
+					}
+					else {
+						var pcost = prop.cost.toFixed (0);
+					}
+					document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.py_name, pcost);
 				}
 			});},
 			get Update () {return __get__ (this, function (self) {
 				self.gm.cycle ();
-				document.getElementById ('cash').innerHTML = 'Total Cash: {}'.format (int (self.gm.currency));
-				document.getElementById ('adv1').innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format (self.gm.pen_count, self.gm.penalties [0].py_name);
+				if (self.gm.currency < 1000000) {
+					var curr = self.gm.currency.toFixed (0);
+				}
+				else {
+					var curr = self.gm.currency.toExponential (3);
+				}
+				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (curr);
+				if (self.two_player) {
+					document.getElementById ('adv1').innerHTML = 'Adversary has {} penalties to apply. Next Penalty {}.'.format (self.gm.pen_count, self.gm.penalties [0].py_name);
+				}
 				var __iterable0__ = list ([1, 2, 3, 4, 5, 6, 7, 8]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var n = __iterable0__ [__index0__];
 					var prop = self.gm.properties [n - 1];
-					document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: {}'.format (prop.count, prop.py_name, int (prop.cost));
+					if (prop.cost > 1000000) {
+						var pcost = prop.cost.toExponential (3);
+					}
+					else {
+						var pcost = prop.cost.toFixed (0);
+					}
+					document.getElementById ('prop' + str (n)).innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.py_name, pcost);
+					document.getElementById ('tt' + str (n)).innerHTML = 'Your {}s are producing ${} per second.'.format (prop.py_name, prop.total_income);
+					var ug = prop.get_next_upgrade ();
+					document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format (ug.py_name, ug.cost, prop.py_name, ug.mult);
 				}
 			});}
 		});

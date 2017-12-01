@@ -68,7 +68,7 @@ class Game:
             self.properties.append(Property(prop[0], prop[1], prop[2], prop[3]))
         for ug in upgrades:
             self.properties[ug[1]].upgrades_Available.append(Upgrade(ug[0], ug[2], ug[3]))
-        
+
 
     def buy_prop(self, prop_to_buy):
         prop = self.properties[prop_to_buy]
@@ -138,7 +138,7 @@ class Two_Player_Game(Game):
 
 class incremental:
 
-    properties = [list (tupl) for tupl in [ 
+    properties = [list (tupl) for tupl in [
         ('Burger Stand', 10.0, 1.15, 1.0),
         ('Diner', 100.0, 1.15, 8.0),
         ('Gas Station', 1000.0, 1.15, 60.0),
@@ -146,10 +146,10 @@ class incremental:
         ('Bank',  65000.0, 1.15, 2500.0),
         ('Department Store',  210000.0, 1.15, 9000.0),
         ('Auto Manufacturer',  4000000.0, 1.15, 100000.0),
-        ('Conglomerate',  100000000.0, 1.15, 2000000.0) 
+        ('Conglomerate',  100000000.0, 1.15, 2000000.0)
     ]]
 
-    upgrades = [list (tupl) for tupl in [ 
+    upgrades = [list (tupl) for tupl in [
         ('Better Burgers', 0, 10, 2.0),
         ('Saltier Fries', 1, 10, 2.0),
         ('Premium Gas', 2, 10, 2.0),
@@ -157,10 +157,10 @@ class incremental:
         ('Subprime Mortgage', 4, 10, 2.0),
         ('New Advertising Campaign', 5, 10, 2.0),
         ('Cheat Safety Regulations', 6, 10, 2.0),
-        ('Outsourcing', 7, 10, 2.0),     
+        ('Outsourcing', 7, 10, 2.0),
     ]]
 
-    penalties = [list (tupl) for tupl in [ 
+    penalties = [list (tupl) for tupl in [
         ('Cost Increase 1', 0, 0, 1.15),
         ('Cost Increase 2', 0, 1, 1.15),
         ('Cost Increase 3', 0, 2, 1.15),
@@ -170,10 +170,10 @@ class incremental:
         ('Cost Increase 7', 0, 6, 1.15),
         ('Cost Increase 8', 0, 7, 1.15),
         ('Penalty 1', 1, 0.5, 100),
-  
+
     ]]
-        
-        
+
+
     def __init__ (self, two_player):
         window.setInterval(self.Update, 1000)
         self.two_player = two_player
@@ -181,8 +181,8 @@ class incremental:
             self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
         else:
             self.gm = Game(self.properties, self.upgrades)
-        
-        
+
+
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
@@ -197,7 +197,7 @@ class incremental:
             curr = self.gm.currency.toExponential(3)
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(curr)
         document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, prop.total_income)
-            
+
 
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
@@ -245,6 +245,5 @@ class incremental:
 
 
 
-            
-game = incremental (False)
-    
+
+game = incremental (True)

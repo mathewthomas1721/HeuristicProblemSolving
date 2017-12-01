@@ -1,9 +1,18 @@
 .section {
-	width: 25%;
+	width: 20%;
 	height: 150px;
-	float: left;
+	float: right;
 	display: inline-block;
 	text-align: center;
+	
+
+}
+
+
+.sectionAd {
+	width: 20%;
+	float: left;
+
 
 }
 
