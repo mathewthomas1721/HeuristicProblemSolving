@@ -1,18 +1,42 @@
 .section {
-	width: 20%;
+	width: 365px;
 	height: 150px;
 	float: right;
 	display: inline-block;
 	text-align: center;
-	
+	font-size: 0.98em;
+
 
 }
 
-
 .sectionAd {
-	width: 20%;
+
+	width: 12%;
 	float: left;
 
+}
+
+.sectionAd img {
+	align:center
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+.buttonsize{
+
+    height:35px;
+    width:150px;
+
+}
+
+.buttonalign{
+	width: 16%;
+	height: 150px;
+	float: left;
+	display: inline-block;
+	align: center;
 
 }
 
