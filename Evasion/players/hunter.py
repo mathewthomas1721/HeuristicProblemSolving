@@ -291,7 +291,7 @@ def strat3(game):
     bestWallEqn = 0
     delWalls = ""
 
-    for i in range(2):
+    for i in range(3):
         wallEqn = lineEqn(game.hunterXPos, game.hunterYPos, i)
         #print str(i) + " " + str(wallEqn)
         dist1 = distanceToWallEqn(game.preyXPos,game.preyYPos,wallEqn)
