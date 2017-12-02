@@ -75,7 +75,7 @@ class Game:
             self.properties.append(Property(prop[0], prop[1], prop[2], prop[3]))
         for ug in upgrades:
             self.properties[ug[1]].upgrades_Available.append(Upgrade(ug[0], ug[2], ug[3]))
-
+        
 
     def buy_prop(self, prop_to_buy):
         prop = self.properties[prop_to_buy]
@@ -145,7 +145,7 @@ class Two_Player_Game(Game):
 
 class incremental:
 
-    properties = [list (tupl) for tupl in [
+    properties = [list (tupl) for tupl in [ 
         ('Burger Stand', 10.0, 1.15, 1.0),
         ('Diner', 100.0, 1.15, 8.0),
         ('Gas Station', 1000.0, 1.15, 60.0),
@@ -153,10 +153,10 @@ class incremental:
         ('Bank',  65000.0, 1.15, 2500.0),
         ('Department Store',  210000.0, 1.15, 9000.0),
         ('Auto Manufacturer',  4000000.0, 1.15, 100000.0),
-        ('Multinational',  100000000.0, 1.15, 2000000.0)
+        ('Multinational',  100000000.0, 1.15, 2000000.0) 
     ]]
 
-    upgrades = [list (tupl) for tupl in [
+    upgrades = [list (tupl) for tupl in [ 
         ('Better Burgers', 0, 10, 2.0),
         ('Saltier Fries', 1, 10, 2.0),
         ('Premium Gas', 2, 10, 2.0),
@@ -164,10 +164,10 @@ class incremental:
         ('Subprime Mortgage', 4, 10, 2.0),
         ('New Advertising Campaign', 5, 10, 2.0),
         ('Cheat Safety Regulations', 6, 10, 2.0),
-        ('Outsourcing', 7, 10, 2.0),
+        ('Outsourcing', 7, 10, 2.0),     
     ]]
 
-    penalties = [list (tupl) for tupl in [
+    penalties = [list (tupl) for tupl in [ 
         ('Cost Increase 1', 0, 0, 1.25),
         ('Cost Increase 2', 0, 1, 1.25),
         ('Cost Increase 3', 0, 2, 1.25),
@@ -177,26 +177,29 @@ class incremental:
         ('Cost Increase 7', 0, 6, 1.25),
         ('Cost Increase 8', 0, 7, 1.25),
         ('Penalty 1', 1, 0.5, 100),
-
+  
     ]]
-
-
+        
+        
     def __init__ (self, two_player):
         window.setInterval(self.Update, 1000)
+        window.addEventListener('keydown', self.respondKey)
         self.two_player = two_player
         if two_player:
             self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
         else:
             self.gm = Game(self.properties, self.upgrades)
-
-
+        
+        
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
         document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, toForm(prop.cost))
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
-
+        if self.two_player:
+            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
+            
 
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
@@ -211,18 +214,37 @@ class incremental:
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
             document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, toForm(prop.cost))
+            document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
 
+
+    def respondKey(self, event):
+        self.keyCode = event.keyCode
+        if self.keyCode == ord ('1'):
+            self.ApplyPenalty(1)
+        elif self.keyCode == ord ('2'):
+            self.ApplyPenalty(2)
+        elif self.keyCode == ord ('3'):
+            self.ApplyPenalty(3)
+        elif self.keyCode == ord ('4'):
+            self.ApplyPenalty(4)
+        elif self.keyCode == ord ('5'):
+            self.ApplyPenalty(5)
+        elif self.keyCode == ord ('6'):
+            self.ApplyPenalty(6)
+        elif self.keyCode == ord ('7'):
+            self.ApplyPenalty(7)
+        elif self.keyCode == ord ('8'):
+            self.ApplyPenalty(8)
 
     def Update (self):
         self.gm.cycle()
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
-            for n in [1,2,3,4,5,6,7,8]:
-                prop = self.gm.properties[n-1]
-                document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
+            if self.two_player:
+                document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
             document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, toForm(prop.cost))
             document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
             ug = prop.get_next_upgrade()
@@ -231,5 +253,6 @@ class incremental:
 
 
 
-
+            
 game = incremental (True)
+    
