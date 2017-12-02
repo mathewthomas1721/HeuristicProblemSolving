@@ -1,7 +1,7 @@
 .section {
 	width: 365px;
 	height: 150px;
-	float: right;
+	float: left;
 	display: inline-block;
 	text-align: center;
 	font-size: 0.98em;
