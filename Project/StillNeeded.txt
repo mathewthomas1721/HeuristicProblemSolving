@@ -1,0 +1,5 @@
+1. Display how much property/upgrade costs next to buttons
+2. Figure out how game ends
+3. Pretty background
+4. Rearrange icons
+5. Theme?

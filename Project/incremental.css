@@ -34,9 +34,17 @@
 }
 
 .buttonalign{
-	width: 16%;
+	width: 8%;
 	height: 150px;
 	float: left;
+	display: inline-block;
+	align: center;
+
+}
+.buttontextalign{
+	width: 8%;
+	height: 150px;
+	float: center;
 	display: inline-block;
 	align: center;
 
@@ -51,6 +59,13 @@
     left: 50%;
 }
 
+.resultsDiv{
+		position:absolute;
+		left:50%;
+		top:25%;
+		width: 100px;
+
+}
 
 .tooltip {
     position: relative;
