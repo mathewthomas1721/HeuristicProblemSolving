@@ -182,13 +182,29 @@ class incremental:
         
         
     def __init__ (self, two_player):
-        window.setInterval(self.Update, 1000)
-        window.addEventListener('keydown', self.respondKey)
         self.two_player = two_player
         if two_player:
-            self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
+            self.StartTwoPlayer()
         else:
-            self.gm = Game(self.properties, self.upgrades)
+            self.StartOnePlayer()
+
+    def StartOnePlayer(self):
+        document.getElementById("cash").style.display = "inline-block"
+        for n in [1,2,3,4,5,6,7,8]:
+            document.getElementById("sec" + str(n)).style.display = "inline-block"
+        self.gm = Game(self.properties, self.upgrades)
+        window.setInterval(self.Update, 1000)
+        self.Setup()
+
+    def StartTwoPlayer(self):
+        document.getElementById("adPane").style.display = "inline-block"
+        document.getElementById("cash").style.display = "inline-block"
+        for n in [1,2,3,4,5,6,7,8]:
+            document.getElementById("sec" + str(n)).style.display = "inline-block"
+        self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
+        window.setInterval(self.Update, 1000)
+        window.addEventListener('keydown', self.respondKey)
+        self.Setup()
         
         
     def BuyProp(self, n):
@@ -203,7 +219,9 @@ class incremental:
 
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
+        prop = self.gm.properties[n-1]
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
+        document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
         ug = prop.get_next_upgrade()
         document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
 
@@ -241,6 +259,14 @@ class incremental:
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
+
+
+    def Setup(self):
+        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
+        if self.two_player:
+            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
+        if self.two_player:
+            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
             if self.two_player:
@@ -249,8 +275,6 @@ class incremental:
             document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
             ug = prop.get_next_upgrade()
             document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
-
-
 
 
             
