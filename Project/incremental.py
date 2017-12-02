@@ -181,22 +181,22 @@ class incremental:
     ]]
         
         
-    def __init__ (self, two_player):
-        self.two_player = two_player
-        if two_player:
-            self.StartTwoPlayer()
-        else:
-            self.StartOnePlayer()
+    #def __init__ (self):
+
+       
 
     def StartOnePlayer(self):
+        document.getElementById("startButtons").style.display = "none"
         document.getElementById("cash").style.display = "inline-block"
         for n in [1,2,3,4,5,6,7,8]:
             document.getElementById("sec" + str(n)).style.display = "inline-block"
         self.gm = Game(self.properties, self.upgrades)
         window.setInterval(self.Update, 1000)
+        self.two_player = False
         self.Setup()
 
     def StartTwoPlayer(self):
+        document.getElementById("startButtons").style.display = "none"
         document.getElementById("adPane").style.display = "inline-block"
         document.getElementById("cash").style.display = "inline-block"
         for n in [1,2,3,4,5,6,7,8]:
@@ -204,6 +204,7 @@ class incremental:
         self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
         window.setInterval(self.Update, 1000)
         window.addEventListener('keydown', self.respondKey)
+        self.two_player = True
         self.Setup()
         
         
@@ -278,5 +279,5 @@ class incremental:
 
 
             
-game = incremental (True)
+game = incremental ()
     
