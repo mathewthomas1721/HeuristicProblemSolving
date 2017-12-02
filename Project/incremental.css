@@ -1,18 +1,20 @@
+.cashdisp{
+	display: none;
+}
 .section {
 	width: 365px;
 	height: 150px;
 	float: left;
-	display: inline-block;
+	display: none;
 	text-align: center;
 	font-size: 0.98em;
-
-
 }
 
 .sectionAd {
 
 	width: 12%;
 	float: left;
+	display: none;
 
 }
 
@@ -39,6 +41,16 @@
 	align: center;
 
 }
+
+.testdiv{
+	position: absolute;
+    height: 200px;
+    width: 400px;
+    margin: -100px 0 0 -200px;
+    top: 50%;
+    left: 50%;
+}
+
 
 .tooltip {
     position: relative;

@@ -1,13 +1,12 @@
 <link rel="stylesheet" type="text/css" href="incremental.css">
-<script src="__javascript__/incremental.js"></script>
 <h2>Incremental Game</h2>
 
 <p>
-<div id = "cash" align = "right">...</div>
-</div>
+<div class = "cashdisp" id = "cash" align = "right">...</div>
+
 
 <p>
-<div class = "sectionAd">
+<div class = "sectionAd" id = "adPane">
 <div id = "advcount" align = "left">...</div>
 <p>
 <img src="burger.png" alt="Burger Stand" style="width:50px;height:40px;">
@@ -69,7 +68,7 @@
 
 <p>
 
-<div class = "section">
+<div class = "section" id = "sec3">
 <img src="burger.png" alt="Burger Stand" style="width:50px;height:50px;">
 <div id = "prop1">...</div>
 <div class = "buttonalign">
@@ -84,7 +83,7 @@
 </div>
 </div>
 
-<div class = "section">
+<div class = "section" id = "sec2">
 <img src="diner.jpg" alt="Diner" style="width:70px;height:50px;">
 <div id = "prop2">...</div>
 <div class = "buttonalign">
@@ -99,7 +98,7 @@
 </div>
 </div>
 
-<div class = "section">
+<div class = "section" "sec3">
 <img src="gas.png" alt="Gas Station" style="width:50px;height:50px;">
 <div id = "prop3">...</div>
 <div class = "buttonalign">
@@ -115,7 +114,7 @@
 </div>
 
 
-<div class = "section">
+<div class = "section" id = "sec4">
 <img src="walmart.jpg" alt="Walmart" style="width:50px;height:50px;">
 <div id = "prop4">...</div>
 <div class = "buttonalign">
@@ -131,7 +130,7 @@
 </div>
 
 
-<div class = "section">
+<div class = "section" id = "sec5">
 <img src="bank.jpg" alt="Banks" style="width:50px;height:50px;">
 <div id = "prop5">...</div>
 <div class = "buttonalign">
@@ -146,7 +145,7 @@
 </div>
 </div>
 
-<div class = "section">
+<div class = "section" id ="sec6">
 <img src="deptstore.png" alt="Department Store" style="width:100px;height:50px;">
 <div id = "prop6">...</div>
 <div class = "buttonalign">
@@ -161,7 +160,7 @@
 </div>
 </div>
 
-<div class = "section">
+<div class = "section" id = "sec7">
 <img src="car.png" alt="Auto Manufacturers" style="width:100px;height:50px;">
 <div id = "prop7">...</div>
 <div class = "buttonalign">
@@ -176,7 +175,7 @@
 </div>
 </div>
 
-<div class = "section">
+<div class = "section" id = "sec8">
 <img src="conglomerate.png" alt="Conglomerates" style="width:75px;height:50px;">
 <div id = "prop8">...</div>
 <div class = "buttonalign">
@@ -190,3 +189,14 @@
 </div>
 </div>
 </div>
+
+<div class="testdiv">
+  <button onclick="incremental.game.StartOnePlayer()" class = "buttonsize">Single Player Game</button>
+  <button onclick="incremental.game.StartTwoPlayer()" class = "buttonsize">Two Player Game</button><br>
+  <form id="timeSet">
+  Time: <input type="number" name="time" value="0"><br>
+  <input type="submit" value="Submit">
+  </form>
+</div>
+
+<script src="__javascript__/incremental.js"></script>
