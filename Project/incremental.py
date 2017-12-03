@@ -181,41 +181,46 @@ class incremental:
     ]]
         
         
-    #def __init__ (self):
+    def __init__ (self):
+        self.endtime = 100000000
+
 
        
 
     def StartOnePlayer(self):
-        document.getElementById("startButtons").style.display = "none"
-        document.getElementById("cash").style.display = "inline-block"
-        for n in [1,2,3,4,5,6,7,8]:
-            document.getElementById("sec" + str(n)).style.display = "inline-block"
+
         self.gm = Game(self.properties, self.upgrades)
-        window.setInterval(self.Update, 1000)
         self.two_player = False
         self.Setup()
 
     def StartTwoPlayer(self):
-        document.getElementById("startButtons").style.display = "none"
-        document.getElementById("adPane").style.display = "inline-block"
-        document.getElementById("cash").style.display = "inline-block"
-        for n in [1,2,3,4,5,6,7,8]:
-            document.getElementById("sec" + str(n)).style.display = "inline-block"
+
         self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
-        window.setInterval(self.Update, 1000)
         window.addEventListener('keydown', self.respondKey)
         self.two_player = True
         self.Setup()
         
-        
+    def EndGame(self):
+        document.getElementById("adPane").style.display = "none"
+        document.getElementById("cash").style.display = "none"
+        for n in [1,2,3,4,5,6,7,8]:
+            document.getElementById("sec" + str(n)).style.display = "none"
+        document.getElementById("startButtons").style.display = "inline-block"
+        document.getElementById("resDiv").style.display = "inline-block"
+        document.getElementById("resDiv").innerHTML = "Game Over. Player earned ${} in {} seconds.".format(toForm(self.gm.currency), self.endtime)
+        window.clearInterval(self.inter)
+        window.removeEventListener('keydown', self.respondKey)
+
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, toForm(prop.cost))
+        document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s.'.format (prop.count, prop.name)
+        document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: ${}'.format (toForm(prop.cost))
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
+
             
 
     def UpgradeProp(self, n):
@@ -225,7 +230,8 @@ class incremental:
         document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
         ug = prop.get_next_upgrade()
         document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
-
+        document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} income by {}'.format(prop.name, ug.mult)
+        document.getElementById('UC' + str(n)).innerHTML = 'Upgrade for ${}'.format(toForm(ug.cost))
 
     def ApplyPenalty(self, n):
         self.gm.applyPenalty(n - 1)
@@ -260,9 +266,25 @@ class incremental:
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
+        if self.gm.counter >= self.endtime:
+            self.EndGame()
+
 
 
     def Setup(self):
+        textbox = document.getElementById("timeSet")
+        self.endtime = int(textbox.elements[0].value)
+        if self.endtime == 0:
+            self.endtime = 1000000000
+
+        document.getElementById("startButtons").style.display = "none"
+        if self.two_player:
+            document.getElementById("adPane").style.display = "inline-block"
+        document.getElementById("resDiv").style.display = "none"
+        document.getElementById("cash").style.display = "inline-block"
+        for n in [1,2,3,4,5,6,7,8]:
+            document.getElementById("sec" + str(n)).style.display = "inline-block"
+        self.inter = window.setInterval(self.Update, 1000)
         document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply.'.format(self.gm.pen_count)
@@ -272,10 +294,12 @@ class incremental:
             prop = self.gm.properties[n-1]
             if self.two_player:
                 document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
-            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s. Cost for next: ${}'.format (prop.count, prop.name, toForm(prop.cost))
+            document.getElementById ('prop'+ str(n)) .innerHTML = 'You own {} {}s.'.format (prop.count, prop.name)
+            document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: ${}'.format (toForm(prop.cost))
             document.getElementById('tt' + str(n)).innerHTML = "Your {}s are producing ${} per second.".format(prop.name, toForm(prop.total_income))
             ug = prop.get_next_upgrade()
-            document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} income by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
+            document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} income by {}'.format(prop.name, ug.mult)
+            document.getElementById('UC' + str(n)).innerHTML = 'Upgrade for ${}'.format(toForm(ug.cost))
 
 
             
