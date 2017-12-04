@@ -7,60 +7,60 @@
 
 <p>
 <div class = "sectionAd" id = "adPane">
-<div id = "advcount" align = "left">...</div>
+<div id = "advcount" align = "left" style = "font-weight: bold;">...</div>
 <p>
-<img src="nim.png" alt="Nim" style="width:50px;height:40px;">
+<img src="nim.png" alt="Nim" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(1)">Penalize Property 1</button>
+<button onclick="incremental.game.ApplyPenalty(1)">Add Constraints - Nim</button>
 <span id = "tta1" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="ssp.jpg" alt="SSP" style="width:70px;height:40px;">
+<img src="ssp.jpg" alt="SSP" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(2)">Penalize Property 2</button>
+<button onclick="incremental.game.ApplyPenalty(2)">Add Constraints - Stoplight</button>
 <span id = "tta2" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="noTip.png" alt="noTip" style="width:50px;height:40px;">
+<img src="noTip.png" alt="noTip" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(3)">Penalize Property 3</button>
+<button onclick="incremental.game.ApplyPenalty(3)">Add Constraints - NoTip</button>
 <span id = "tta3" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="voronoi.png" alt="Voronoi" style="width:50px;height:40px;">
+<img src="voronoi.png" alt="Voronoi" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(4)">Penalize Property 4</button>
+<button onclick="incremental.game.ApplyPenalty(4)">Add Constraints - Voronoi</button>
 <span id = "tta4" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="evasion.jpg" alt="Evasion" style="width:50px;height:30px;">
+<img src="evasion.jpg" alt="Evasion" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(5)">Penalize Property 5</button>
+<button onclick="incremental.game.ApplyPenalty(5)">Add Constraints - Evasion</button>
 <span id = "tta5" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="dancing.jpg" alt="Dancing" style="width:100px;height:40px;">
+<img src="dancing.jpg" alt="Dancing" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(6)">Penalize Property 6</button>
+<button onclick="incremental.game.ApplyPenalty(6)">Add Constraints - Dancing</button>
 <span id = "tta6" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="compatibility.jpg" alt="Compatibility" style="width:100px;height:40px;">
+<img src="compatibility.jpg" alt="Compatibility" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(7)">Penalize Property 7</button>
+<button onclick="incremental.game.ApplyPenalty(7)" style = "font-size: 0.65em;">Add Constraints - Compatibility</button>
 <span id = "tta7" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="auction.jpg" alt="Auctions" style="width:75px;height:40px;">
+<img src="auction.jpg" alt="Auctions" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(8)">Penalize Property 8</button>
+<button onclick="incremental.game.ApplyPenalty(8)">Add Constraints - Auction</button>
 <span id = "tta8" class="tooltiptext">Testing</span>
 </div>
 
@@ -255,10 +255,20 @@
   <button onclick="incremental.game.StartOnePlayer()" class = "buttonsize">Single Player Game</button>
   <button onclick="incremental.game.StartTwoPlayer()" class = "buttonsize">Two Player Game</button><br><br>
   <form id="timeSet">
-  Time: <input type="number" name="time" value="0"> <br>Enter Game Duration.<br> Enter zero for an infinite game.<br>
+  Time: <input type="number" name="time" value="0"> <br><br>Enter Game Duration<br> Enter zero for an infinite game<br>
 
 </form>
 </div>
-
+<div class = "instructiontext" id = "ins">
+  Key Mappings For Adversary :<br>
+  1 : Add Constraints - Nim <br>
+  2 : Add Constraints - Stoplight <br>
+  3 : Add Constraints - NoTip <br>
+  4 : Add Constraints - Voronoi <br>
+  5 : Add Constraints - Evasion <br>
+  6 : Add Constraints - Dancing <br>
+  7 : Add Constraints - Compatibility <br>
+  8 : Add Constraints - Auction <br>
+</div>
 
 <script src="__javascript__/incremental.js"></script>

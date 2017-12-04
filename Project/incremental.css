@@ -1,10 +1,22 @@
 .cashdisp{
 	display: none;
+	font-weight: bold;
+}
+
+.instructiontext{
+	width: 365px;
+	height: 300px;
+	float: left;
+	font-weight: bold;
+	text-align: left;
+	display: none;
+	font-size: 0.98em;
 }
 .section {
 	width: 365px;
 	height: 300px;
 	float: left;
+	font-weight: bold;
 	display: none;
 	text-align: center;
 	font-size: 0.98em;
@@ -30,6 +42,7 @@
 
     height:35px;
     width:150px;
+		font-weight: bold;
 
 }
 
@@ -51,7 +64,7 @@
 }
 
 .buttontextdesc{
-	width: 60%;
+	width: 80%;
 	height: 300px;
 	display: inline-block;
 	text-align:right;

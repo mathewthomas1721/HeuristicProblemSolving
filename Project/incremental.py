@@ -172,7 +172,7 @@ class incremental:
         ('No Diagonal Walls', 4, 80000, 2.0),
         ('Simulated Annealing', 5, 500000, 2.0),
         ('Depth First Search', 6, 7000000, 2.0),
-        ('Be First Bidder', 7, 33000000, 2.0),
+        ('Block Opponents', 7, 33000000, 2.0),
     ]]
 
     penalties = [list (tupl) for tupl in [
