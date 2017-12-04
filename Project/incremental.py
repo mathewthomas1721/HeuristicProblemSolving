@@ -1,6 +1,17 @@
-
+base_mult = 1.25
+base_pen = 1.5
 
 def toForm(num):
+    if (num > 1000000):
+        return num.toExponential(3)
+    else:
+        round_num = num.toFixed(0)
+        if int(round_num) < num:
+            return (num + 1).toFixed(0)
+        else:
+            return round_num
+
+def toForm2(num):
     if (num > 1000000):
         return num.toExponential(3)
     else:
@@ -53,13 +64,6 @@ class Penalty:
             self.type = 0
             self.prop = pen[2]
             self.mult = pen[3]
-        elif pen[1] == 1:
-            self.type = 1
-            self.mult = pen[2]
-            self.duration = pen[3]
-            self.time_left = self.duration
-        else:
-            self.name = "Florg"
 
 
 
@@ -67,7 +71,8 @@ class Penalty:
 class Game:
     def __init__(self, props, upgrades):
         self.counter = 0
-        self.currency = 10.0
+        self.time = 0
+        self.currency = 6.0
         self.pen_count = 0
         self.properties = []
         self.global_multiplier = 1.0
@@ -97,6 +102,7 @@ class Game:
 
     def cycle(self):
         self.counter += 1
+        self.time += 1
         for prop in self.properties:
             self.currency += prop.total_income * self.global_multiplier
 
@@ -114,12 +120,14 @@ class Two_Player_Game(Game):
     def buy_prop(self, prop_to_buy):
         succeed = Game.buy_prop(self, prop_to_buy)
         if succeed:
+            self.counter = 0
             self.pen_count += 1
 
     def cycle(self):
         Game.cycle(self)
-        if self.counter % 25 == 0:
+        if self.counter >= 20:
             self.pen_count += 1
+            self.counter = 0
         new_active = self.active_penalties
         self.active_penalties = []
         for pen in self.active_penalties:
@@ -146,38 +154,36 @@ class Two_Player_Game(Game):
 class incremental:
 
     properties = [list (tupl) for tupl in [
-        ('Expanding Nim Problem', 10.0, 1.15, 1.0),
-        ('Stoplight Shortest Path Problem', 100.0, 1.15, 8.0),
-        ('No Tipping Problem', 1000.0, 1.15, 60.0),
-        ('Gravitational Voronoi Problem', 8000.0, 1.15, 420.0),
-        ('Evasion',  65000.0, 1.15, 2500.0),
-        ('Dancing Without Stars Problem',  210000.0, 1.15, 9000.0),
-        ('Compatibility Problem',  4000000.0, 1.15, 100000.0),
-        ('Auction Problem',  100000000.0, 1.15, 2000000.0)
+        ('Expanding Nim', 6.0, base_mult, 1.0),
+        ('Stoplight Shortest Path', 50.0, base_mult, 6.0),
+        ('No Tipping', 400.0, base_mult, 35.0),
+        ('Gravitational Voronoi', 2000.0, base_mult, 144.0),
+        ('Evasion',  10000.0, base_mult, 600.0),
+        ('Dancing Without Stars',  50000.0, base_mult, 2200.0),
+        ('Compatibility Game',  400000.0, base_mult, 11111.0),
+        ('Auction Game',  2000000.0, base_mult, 40000.0)
     ]]
 
     upgrades = [list (tupl) for tupl in [
-        ('Develop Better Algorithm', 0, 10, 2.0),
-        ('Develop Better Algorithm', 1, 10, 2.0),
-        ('Develop Better Algorithms', 2, 10, 2.0),
-        ('Develop Better Algorithm', 3, 10, 2.0),
-        ('Develop Better Algorithm', 4, 10, 2.0),
-        ('Develop Better Algorithm', 5, 10, 2.0),
-        ('Develop Better Algorithm', 6, 10, 2.0),
-        ('Develop Better Algorithm', 7, 10, 2.0),
+        ('Dynamic Programming', 0, 40, 2.0),
+        ("Dijkstra's Algorithm", 1, 250, 2.0),
+        ('Dynamic Programming', 2, 3000, 2.0),
+        ('Clustering', 3, 18000, 2.0),
+        ('No Diagonal Walls', 4, 80000, 2.0),
+        ('Simulated Annealing', 5, 500000, 2.0),
+        ('Depth First Search', 6, 7000000, 2.0),
+        ('Be First Bidder', 7, 33000000, 2.0),
     ]]
 
     penalties = [list (tupl) for tupl in [
-        ('Cost Increase 1', 0, 0, 1.25),
-        ('Cost Increase 2', 0, 1, 1.25),
-        ('Cost Increase 3', 0, 2, 1.25),
-        ('Cost Increase 4', 0, 3, 1.25),
-        ('Cost Increase 5', 0, 4, 1.25),
-        ('Cost Increase 6', 0, 5, 1.25),
-        ('Cost Increase 7', 0, 6, 1.25),
-        ('Cost Increase 8', 0, 7, 1.25),
-        ('Penalty 1', 1, 0.5, 100),
-
+        ('Cost Increase 1', 0, 0, base_pen),
+        ('Cost Increase 2', 0, 1, base_pen),
+        ('Cost Increase 3', 0, 2, base_pen),
+        ('Cost Increase 4', 0, 3, base_pen),
+        ('Cost Increase 5', 0, 4, base_pen),
+        ('Cost Increase 6', 0, 5, base_pen),
+        ('Cost Increase 7', 0, 6, base_pen),
+        ('Cost Increase 8', 0, 7, base_pen),
     ]]
 
 
@@ -207,17 +213,17 @@ class incremental:
             document.getElementById("sec" + str(n)).style.display = "none"
         document.getElementById("startButtons").style.display = "inline-block"
         document.getElementById("resDiv").style.display = "inline-block"
-        document.getElementById("resDiv").innerHTML = "Game Over. Player earned ${} in {} seconds.".format(toForm(self.gm.currency), self.endtime)
+        document.getElementById("resDiv").innerHTML = "Game Over. Player earned ${} in {} seconds.".format(toForm2(self.gm.currency), self.endtime)
         window.clearInterval(self.inter)
         window.removeEventListener('keydown', self.respondKey)
 
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById ('prop'+ str(n)) .innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.name)
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
         document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm(self.gm.currency))
-        document.getElementById('tt' + str(n)).innerHTML = "Your {} algorithm is earning {} KitKats per second".format(prop.name, toForm(prop.total_income))
+        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
+        document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
 
@@ -226,8 +232,9 @@ class incremental:
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm(self.gm.currency))
-        document.getElementById('tt' + str(n)).innerHTML = "Your {} algorithm is earning {} KitKats per second".format(prop.name, toForm(prop.total_income))
+        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
+        document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
         ug = prop.get_next_upgrade()
         document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} earnings by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
         document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} earnings by {}'.format(prop.name, ug.mult)
@@ -236,10 +243,9 @@ class incremental:
     def ApplyPenalty(self, n):
         self.gm.applyPenalty(n - 1)
         document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
-        for n in [1,2,3,4,5,6,7,8]:
-            prop = self.gm.properties[n-1]
-            document.getElementById ('prop'+ str(n)) .innerHTML = 'You developed {} {} algorithms Cost for next: {} KitKats'.format (prop.count, prop.name, toForm(prop.cost))
-            document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
+        prop = self.gm.properties[n-1]
+        document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
+        document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
 
 
     def respondKey(self, event):
@@ -263,10 +269,10 @@ class incremental:
 
     def Update (self):
         self.gm.cycle()
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm(self.gm.currency))
+        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
-        if self.gm.counter >= self.endtime:
+        if self.gm.time >= self.endtime:
             self.EndGame()
 
 
@@ -278,14 +284,14 @@ class incremental:
             self.endtime = 1000000000
 
         document.getElementById("startButtons").style.display = "none"
+        document.getElementById("resDiv").style.display = "none"
         if self.two_player:
             document.getElementById("adPane").style.display = "inline-block"
-        document.getElementById("resDiv").style.display = "none"
         document.getElementById("cash").style.display = "inline-block"
         for n in [1,2,3,4,5,6,7,8]:
             document.getElementById("sec" + str(n)).style.display = "inline-block"
         self.inter = window.setInterval(self.Update, 1000)
-        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm(self.gm.currency))
+        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm2(self.gm.currency))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
         if self.two_player:
@@ -293,10 +299,10 @@ class incremental:
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
             if self.two_player:
-                document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
-            document.getElementById ('prop'+ str(n)) .innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.name)
+                document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n-1].mult.toFixed(2))
+            document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
             document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
-            document.getElementById('tt' + str(n)).innerHTML = "Your {} algorithm is earning {} KitKats per second".format(prop.name, toForm(prop.total_income))
+            document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
             ug = prop.get_next_upgrade()
             document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} earnings by {}'.format(prop.name, ug.mult)
             document.getElementById('UC' + str(n)).innerHTML = 'Upgrade : {} KitKats'.format(toForm(ug.cost))
