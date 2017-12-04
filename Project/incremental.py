@@ -203,12 +203,14 @@ class incremental:
 
         self.gm = Two_Player_Game(self.properties,self.upgrades, self.penalties)
         window.addEventListener('keydown', self.respondKey)
+        document.getElementById("ins").style.display = "inline-block"
         self.two_player = True
         self.Setup()
 
     def EndGame(self):
         document.getElementById("adPane").style.display = "none"
         document.getElementById("cash").style.display = "none"
+        document.getElementById("ins").style.display = "none"
         for n in [1,2,3,4,5,6,7,8]:
             document.getElementById("sec" + str(n)).style.display = "none"
         document.getElementById("startButtons").style.display = "inline-block"
