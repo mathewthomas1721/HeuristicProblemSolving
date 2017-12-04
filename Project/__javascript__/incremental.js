@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-03 20:29:56
+// Transcrypt'ed from Python, 2017-12-04 16:24:19
 function incremental () {
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2467,7 +2467,23 @@ function incremental () {
     };
     __all__.__setslice__ = __setslice__;
 	(function () {
+		var base_mult = 1.25;
+		var base_pen = 1.5;
 		var toForm = function (num) {
+			if (num > 1000000) {
+				return num.toExponential (3);
+			}
+			else {
+				var round_num = num.toFixed (0);
+				if (int (round_num) < num) {
+					return (num + 1).toFixed (0);
+				}
+				else {
+					return round_num;
+				}
+			}
+		};
+		var toForm2 = function (num) {
 			if (num > 1000000) {
 				return num.toExponential (3);
 			}
@@ -2525,21 +2541,13 @@ function incremental () {
 					self.prop = pen [2];
 					self.mult = pen [3];
 				}
-				else if (pen [1] == 1) {
-					self.py_metatype = 1;
-					self.mult = pen [2];
-					self.duration = pen [3];
-					self.time_left = self.duration;
-				}
-				else {
-					self.py_name = 'Florg';
-				}
 			});}
 		});
 		var Game = __class__ ('Game', [object], {
 			get __init__ () {return __get__ (this, function (self, props, upgrades) {
 				self.counter = 0;
-				self.currency = 10.0;
+				self.time = 0;
+				self.currency = 6.0;
 				self.pen_count = 0;
 				self.properties = list ([]);
 				self.global_multiplier = 1.0;
@@ -2576,6 +2584,7 @@ function incremental () {
 			});},
 			get cycle () {return __get__ (this, function (self) {
 				self.counter++;
+				self.time++;
 				var __iterable0__ = self.properties;
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var prop = __iterable0__ [__index0__];
@@ -2602,13 +2611,15 @@ function incremental () {
 			get buy_prop () {return __get__ (this, function (self, prop_to_buy) {
 				var succeed = Game.buy_prop (self, prop_to_buy);
 				if (succeed) {
+					self.counter = 0;
 					self.pen_count++;
 				}
 			});},
 			get cycle () {return __get__ (this, function (self) {
 				Game.cycle (self);
-				if (__mod__ (self.counter, 25) == 0) {
+				if (self.counter >= 20) {
 					self.pen_count++;
+					self.counter = 0;
 				}
 				var new_active = self.active_penalties;
 				self.active_penalties = list ([]);
@@ -2643,7 +2654,7 @@ function incremental () {
 		var incremental = __class__ ('incremental', [object], {
 			properties: function () {
 				var __accu0__ = [];
-				var __iterable0__ = list ([tuple (['Expanding Nim Problem', 10.0, 1.15, 1.0]), tuple (['Stoplight Shortest Path Problem', 100.0, 1.15, 8.0]), tuple (['No Tipping Problem', 1000.0, 1.15, 60.0]), tuple (['Gravitational Voronoi Problem', 8000.0, 1.15, 420.0]), tuple (['Evasion', 65000.0, 1.15, 2500.0]), tuple (['Dancing Without Stars Problem', 210000.0, 1.15, 9000.0]), tuple (['Compatibility Problem', 4000000.0, 1.15, 100000.0]), tuple (['Auction Problem', 100000000.0, 1.15, 2000000.0])]);
+				var __iterable0__ = list ([tuple (['Expanding Nim', 6.0, base_mult, 1.0]), tuple (['Stoplight Shortest Path', 50.0, base_mult, 6.0]), tuple (['No Tipping', 400.0, base_mult, 35.0]), tuple (['Gravitational Voronoi', 2000.0, base_mult, 144.0]), tuple (['Evasion', 10000.0, base_mult, 600.0]), tuple (['Dancing Without Stars', 50000.0, base_mult, 2200.0]), tuple (['Compatibility Game', 400000.0, base_mult, 11111.0]), tuple (['Auction Game', 2000000.0, base_mult, 40000.0])]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var tupl = __iterable0__ [__index0__];
 					__accu0__.append (list (tupl));
@@ -2652,7 +2663,7 @@ function incremental () {
 			} (),
 			upgrades: function () {
 				var __accu0__ = [];
-				var __iterable0__ = list ([tuple (['Develop Better Algorithm', 0, 10, 2.0]), tuple (['Develop Better Algorithm', 1, 10, 2.0]), tuple (['Develop Better Algorithms', 2, 10, 2.0]), tuple (['Develop Better Algorithm', 3, 10, 2.0]), tuple (['Develop Better Algorithm', 4, 10, 2.0]), tuple (['Develop Better Algorithm', 5, 10, 2.0]), tuple (['Develop Better Algorithm', 6, 10, 2.0]), tuple (['Develop Better Algorithm', 7, 10, 2.0])]);
+				var __iterable0__ = list ([tuple (['Dynamic Programming', 0, 40, 2.0]), tuple (["Dijkstra's Algorithm", 1, 250, 2.0]), tuple (['Dynamic Programming', 2, 3000, 2.0]), tuple (['Clustering', 3, 18000, 2.0]), tuple (['No Diagonal Walls', 4, 80000, 2.0]), tuple (['Simulated Annealing', 5, 500000, 2.0]), tuple (['Depth First Search', 6, 7000000, 2.0]), tuple (['Block Opponents', 7, 33000000, 2.0])]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var tupl = __iterable0__ [__index0__];
 					__accu0__.append (list (tupl));
@@ -2661,7 +2672,7 @@ function incremental () {
 			} (),
 			penalties: function () {
 				var __accu0__ = [];
-				var __iterable0__ = list ([tuple (['Cost Increase 1', 0, 0, 1.25]), tuple (['Cost Increase 2', 0, 1, 1.25]), tuple (['Cost Increase 3', 0, 2, 1.25]), tuple (['Cost Increase 4', 0, 3, 1.25]), tuple (['Cost Increase 5', 0, 4, 1.25]), tuple (['Cost Increase 6', 0, 5, 1.25]), tuple (['Cost Increase 7', 0, 6, 1.25]), tuple (['Cost Increase 8', 0, 7, 1.25]), tuple (['Penalty 1', 1, 0.5, 100])]);
+				var __iterable0__ = list ([tuple (['Cost Increase 1', 0, 0, base_pen]), tuple (['Cost Increase 2', 0, 1, base_pen]), tuple (['Cost Increase 3', 0, 2, base_pen]), tuple (['Cost Increase 4', 0, 3, base_pen]), tuple (['Cost Increase 5', 0, 4, base_pen]), tuple (['Cost Increase 6', 0, 5, base_pen]), tuple (['Cost Increase 7', 0, 6, base_pen]), tuple (['Cost Increase 8', 0, 7, base_pen])]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var tupl = __iterable0__ [__index0__];
 					__accu0__.append (list (tupl));
@@ -2679,12 +2690,14 @@ function incremental () {
 			get StartTwoPlayer () {return __get__ (this, function (self) {
 				self.gm = Two_Player_Game (self.properties, self.upgrades, self.penalties);
 				window.addEventListener ('keydown', self.respondKey);
+				document.getElementById ('ins').style.display = 'inline-block';
 				self.two_player = true;
 				self.Setup ();
 			});},
 			get EndGame () {return __get__ (this, function (self) {
 				document.getElementById ('adPane').style.display = 'none';
 				document.getElementById ('cash').style.display = 'none';
+				document.getElementById ('ins').style.display = 'none';
 				var __iterable0__ = list ([1, 2, 3, 4, 5, 6, 7, 8]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var n = __iterable0__ [__index0__];
@@ -2692,17 +2705,17 @@ function incremental () {
 				}
 				document.getElementById ('startButtons').style.display = 'inline-block';
 				document.getElementById ('resDiv').style.display = 'inline-block';
-				document.getElementById ('resDiv').innerHTML = 'Game Over. Player earned ${} in {} seconds.'.format (toForm (self.gm.currency), self.endtime);
+				document.getElementById ('resDiv').innerHTML = 'Game Over. Player earned ${} in {} seconds.'.format (toForm2 (self.gm.currency), self.endtime);
 				window.clearInterval (self.inter);
 				window.removeEventListener ('keydown', self.respondKey);
 			});},
 			get BuyProp () {return __get__ (this, function (self, n) {
 				self.gm.buy_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
-				document.getElementById ('prop' + str (n)).innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.py_name);
+				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
 				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm (self.gm.currency));
-				document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 				if (self.two_player) {
 					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
 				}
@@ -2710,8 +2723,9 @@ function incremental () {
 			get UpgradeProp () {return __get__ (this, function (self, n) {
 				self.gm.upgrade_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm (self.gm.currency));
-				document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
+				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 				var ug = prop.get_next_upgrade ();
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} earnings by {}'.format (ug.py_name, toForm (ug.cost), prop.py_name, ug.mult);
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
@@ -2720,13 +2734,9 @@ function incremental () {
 			get ApplyPenalty () {return __get__ (this, function (self, n) {
 				self.gm.applyPenalty (n - 1);
 				document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
-				var __iterable0__ = list ([1, 2, 3, 4, 5, 6, 7, 8]);
-				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
-					var n = __iterable0__ [__index0__];
-					var prop = self.gm.properties [n - 1];
-					document.getElementById ('prop' + str (n)).innerHTML = 'You developed {} {} algorithms Cost for next: {} KitKats'.format (prop.count, prop.py_name, toForm (prop.cost));
-					document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n].mult.toFixed (2));
-				}
+				var prop = self.gm.properties [n - 1];
+				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
+				document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n].mult.toFixed (2));
 			});},
 			get respondKey () {return __get__ (this, function (self, event) {
 				self.keyCode = event.keyCode;
@@ -2757,11 +2767,11 @@ function incremental () {
 			});},
 			get Update () {return __get__ (this, function (self) {
 				self.gm.cycle ();
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm (self.gm.currency));
+				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
 				if (self.two_player) {
 					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
 				}
-				if (self.gm.counter >= self.endtime) {
+				if (self.gm.time >= self.endtime) {
 					self.EndGame ();
 				}
 			});},
@@ -2772,10 +2782,10 @@ function incremental () {
 					self.endtime = 1000000000;
 				}
 				document.getElementById ('startButtons').style.display = 'none';
+				document.getElementById ('resDiv').style.display = 'none';
 				if (self.two_player) {
 					document.getElementById ('adPane').style.display = 'inline-block';
 				}
-				document.getElementById ('resDiv').style.display = 'none';
 				document.getElementById ('cash').style.display = 'inline-block';
 				var __iterable0__ = list ([1, 2, 3, 4, 5, 6, 7, 8]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
@@ -2783,7 +2793,7 @@ function incremental () {
 					document.getElementById ('sec' + str (n)).style.display = 'inline-block';
 				}
 				self.inter = window.setInterval (self.Update, 1000);
-				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (toForm (self.gm.currency));
+				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (toForm2 (self.gm.currency));
 				if (self.two_player) {
 					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
 				}
@@ -2795,11 +2805,11 @@ function incremental () {
 					var n = __iterable0__ [__index0__];
 					var prop = self.gm.properties [n - 1];
 					if (self.two_player) {
-						document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n].mult.toFixed (2));
+						document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n - 1].mult.toFixed (2));
 					}
-					document.getElementById ('prop' + str (n)).innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.py_name);
+					document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
 					document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
-					document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+					document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 					var ug = prop.get_next_upgrade ();
 					document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
 					document.getElementById ('UC' + str (n)).innerHTML = 'Upgrade : {} KitKats'.format (toForm (ug.cost));
@@ -2813,9 +2823,12 @@ function incremental () {
 			__all__.Property = Property;
 			__all__.Two_Player_Game = Two_Player_Game;
 			__all__.Upgrade = Upgrade;
+			__all__.base_mult = base_mult;
+			__all__.base_pen = base_pen;
 			__all__.game = game;
 			__all__.incremental = incremental;
 			__all__.toForm = toForm;
+			__all__.toForm2 = toForm2;
 		__pragma__ ('</all>')
 	}) ();
    return __all__;
