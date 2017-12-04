@@ -234,7 +234,7 @@
 				document.getElementById ('prop' + str (n)).innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.py_name);
 				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
 				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm (self.gm.currency));
-				document.getElementById ('tt' + str (n)).innerHTML = 'Your {}s are earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+				document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
 				if (self.two_player) {
 					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
 				}
@@ -243,7 +243,7 @@
 				self.gm.upgrade_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
 				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm (self.gm.currency));
-				document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithms are earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+				document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
 				var ug = prop.get_next_upgrade ();
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} earnings by {}'.format (ug.py_name, toForm (ug.cost), prop.py_name, ug.mult);
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
@@ -331,7 +331,7 @@
 					}
 					document.getElementById ('prop' + str (n)).innerHTML = 'You developed {} {} algorithms'.format (prop.count, prop.py_name);
 					document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
-					document.getElementById ('tt' + str (n)).innerHTML = 'Your {}s are earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
+					document.getElementById ('tt' + str (n)).innerHTML = 'Your {} algorithm is earning {} KitKats per second'.format (prop.py_name, toForm (prop.total_income));
 					var ug = prop.get_next_upgrade ();
 					document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
 					document.getElementById ('UC' + str (n)).innerHTML = 'Upgrade : {} KitKats'.format (toForm (ug.cost));
