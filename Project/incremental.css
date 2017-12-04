@@ -3,7 +3,7 @@
 }
 .section {
 	width: 365px;
-	height: 150px;
+	height: 300px;
 	float: left;
 	display: none;
 	text-align: center;
@@ -50,6 +50,14 @@
 
 }
 
+.buttontextdesc{
+	width: 60%;
+	height: 300px;
+	display: inline-block;
+	text-align:right;
+
+}
+
 .testdiv{
 	position: absolute;
     height: 200px;
@@ -61,11 +69,10 @@
 
 .resultsDiv{
 		position:absolute;
-		left:50%;
+		left:39%;
 		top:25%;
-		width: 100px;
+		width: 400px;
 		display : none;
-
 }
 
 .tooltip {
