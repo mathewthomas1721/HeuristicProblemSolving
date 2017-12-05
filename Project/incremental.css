@@ -74,10 +74,10 @@
 }
 
 .testdiv{
-	position: absolute;
+		position: relative;
     height: 200px;
     width: 400px;
-    margin: -100px 0 0 -200px;
+    margin: 5% 0 0 -10%;
     top: 50%;
     left: 50%;
 		font-weight: bold;
@@ -93,7 +93,6 @@
 }
 
 .storydiv{
-		position:relative;
 
 		display : inline - block;
 		font-weight: bold;
