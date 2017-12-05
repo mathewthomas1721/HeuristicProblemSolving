@@ -1,5 +1,7 @@
+<!DOCTYPE html>
+<html>
 <link rel="stylesheet" type="text/css" href="incremental.css">
-<h2>Incremental Game</h2>
+<h1>The Enterpren<i>Heurist</i> Game</h1>
 
 <p>
 <div class = "cashdisp" id = "cash" align = "right"></div>
@@ -7,60 +9,60 @@
 
 <p>
 <div class = "sectionAd" id = "adPane">
-<div id = "advcount" align = "left">...</div>
+<div id = "advcount" align = "left" style = "font-weight: bold;">...</div>
 <p>
-<img src="nim.png" alt="Nim" style="width:50px;height:40px;">
+<img src="nim.png" alt="Nim" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(1)">Penalize Property 1</button>
+<button onclick="incremental.game.ApplyPenalty(1)">Add Constraints - Nim</button>
 <span id = "tta1" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="ssp.jpg" alt="SSP" style="width:70px;height:40px;">
+<img src="ssp.jpg" alt="SSP" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(2)">Penalize Property 2</button>
+<button onclick="incremental.game.ApplyPenalty(2)">Add Constraints - Stoplight</button>
 <span id = "tta2" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="noTip.png" alt="noTip" style="width:50px;height:40px;">
+<img src="noTip.png" alt="noTip" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(3)">Penalize Property 3</button>
+<button onclick="incremental.game.ApplyPenalty(3)">Add Constraints - NoTip</button>
 <span id = "tta3" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="voronoi.png" alt="Voronoi" style="width:50px;height:40px;">
+<img src="voronoi.png" alt="Voronoi" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(4)">Penalize Property 4</button>
+<button onclick="incremental.game.ApplyPenalty(4)">Add Constraints - Voronoi</button>
 <span id = "tta4" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="evasion.jpg" alt="Evasion" style="width:50px;height:30px;">
+<img src="evasion.jpg" alt="Evasion" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(5)">Penalize Property 5</button>
+<button onclick="incremental.game.ApplyPenalty(5)">Add Constraints - Evasion</button>
 <span id = "tta5" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="dancing.jpg" alt="Dancing" style="width:100px;height:40px;">
+<img src="dancing.jpg" alt="Dancing" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(6)">Penalize Property 6</button>
+<button onclick="incremental.game.ApplyPenalty(6)">Add Constraints - Dancing</button>
 <span id = "tta6" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="compatibility.jpg" alt="Compatibility" style="width:100px;height:40px;">
+<img src="compatibility.jpg" alt="Compatibility" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(7)">Penalize Property 7</button>
+<button onclick="incremental.game.ApplyPenalty(7)" style = "font-size: 0.65em;">Add Constraints - Compatibility</button>
 <span id = "tta7" class="tooltiptext">Testing</span>
 </div>
 
 <p>
-<img src="auction.jpg" alt="Auctions" style="width:75px;height:40px;">
+<img src="auction.jpg" alt="Auctions" style="width:40px;height:40px;display: block; margin-left: 50px;">
 <div class="tooltip">
-<button onclick="incremental.game.ApplyPenalty(8)">Penalize Property 8</button>
+<button onclick="incremental.game.ApplyPenalty(8)">Add Constraints - Auction</button>
 <span id = "tta8" class="tooltiptext">Testing</span>
 </div>
 
@@ -255,10 +257,30 @@
   <button onclick="incremental.game.StartOnePlayer()" class = "buttonsize">Single Player Game</button>
   <button onclick="incremental.game.StartTwoPlayer()" class = "buttonsize">Two Player Game</button><br><br>
   <form id="timeSet">
-  Time: <input type="number" name="time" value="0"><br>
-
+  Time: <input type="number" name="time" value="0"> <br><br>Enter Game Duration<br> Enter zero for an infinite game<br>
 </form>
 </div>
-
+<div class = "storydiv" id >
+  <p>
+  The year is 2018. Flesh-eating Baby Snakes have devoured all non-heurists, society has collapsed, and the economy runs entirely on KitKat bars. With his seemingly endless stash of candy, Lord Shasha rules the business world. The only way to improve your station is to sell him algorithms that solve his problems. Get to work and become the greatest omniheurist in the land. Earn as many KitKats as you can, but watch out, Lord Shasha has been known to change his problems to make them more challenging.
+  <p>
+  The object of the EntreprenHeurist Game is to earn as many KitKits as possible in a set amount of time. You can enter a time limit (in seconds) below. By default, the game will run forever. The game can be played either as a classic single player incremental game, or as a two player, adversarial game.
+  <p>
+  In single player mode, you play as the entreprenheurist and aim to earn as many KitKats as possible by developing and improving algorithms for various games. As a programmer requires sugary fuel to work, it costs some of your KitKats to develop algorithms. Once developed, they will provide you a steady stream of income. Any improvements on your algorithm will cost more than the one before it. Use the mouse to choose your algorithms and upgrades.
+  <p>
+  In two player mode, the first player plays as the entreprenheurist and uses the mouse to develop and improve algorithms with the goal of earning as many KitKats as possible. The second player acts as Lord Shasha and adds new constraints to make an efficient algorithm harder to develop, and therefore more costly. The goal of the adversary is to apply these penalties in order to minimize the amount of KitKats the the entreprenheurist can earn. The adversary earns a penalty each time the entreprenheurist develops an algorithm and also when the player has been inactive for 20 seconds. The adversary applies these penalties using the number keys or mouse click.
+</div>
+<div class = "instructiontext" id = "ins">
+  Key Mappings For Adversary :<br>
+  1 : Add Constraints - Nim <br>
+  2 : Add Constraints - Stoplight <br>
+  3 : Add Constraints - NoTip <br>
+  4 : Add Constraints - Voronoi <br>
+  5 : Add Constraints - Evasion <br>
+  6 : Add Constraints - Dancing <br>
+  7 : Add Constraints - Compatibility <br>
+  8 : Add Constraints - Auction <br>
+</div>
 
 <script src="__javascript__/incremental.js"></script>
+</html>

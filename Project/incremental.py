@@ -73,6 +73,7 @@ class Game:
         self.counter = 0
         self.time = 0
         self.currency = 6.0
+        self.cum_currency = 0.0
         self.pen_count = 0
         self.properties = []
         self.global_multiplier = 1.0
@@ -105,6 +106,7 @@ class Game:
         self.time += 1
         for prop in self.properties:
             self.currency += prop.total_income * self.global_multiplier
+            self.cum_currency += prop.total_income * self.global_multiplier
 
 
 class Two_Player_Game(Game):
@@ -215,7 +217,7 @@ class incremental:
             document.getElementById("sec" + str(n)).style.display = "none"
         document.getElementById("startButtons").style.display = "inline-block"
         document.getElementById("resDiv").style.display = "inline-block"
-        document.getElementById("resDiv").innerHTML = "Game Over. Player earned ${} in {} seconds.".format(toForm2(self.gm.currency), self.endtime)
+        document.getElementById("resDiv").innerHTML = "Game Over. Player earned {} KitKats in {} seconds.".format(toForm2(self.gm.cum_currency), self.endtime)
         window.clearInterval(self.inter)
         window.removeEventListener('keydown', self.respondKey)
 
@@ -224,27 +226,33 @@ class incremental:
         prop = self.gm.properties[n-1]
         document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
         document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
+        if (self.endtime - self.gm.time < 10000):
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
+        else:
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
         document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
         if self.two_player:
-            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
+            document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
 
 
 
     def UpgradeProp(self, n):
         self.gm.upgrade_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
+        if (self.endtime - self.gm.time < 10000):
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
+        else:
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
         document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
         document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
         ug = prop.get_next_upgrade()
-        document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} earnings by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
+        document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for {} KitKats. Multipy all {} earnings by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
         document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} earnings by {}'.format(prop.name, ug.mult)
         document.getElementById('UC' + str(n)).innerHTML = 'Upgrade : {} KitKats'.format(toForm(ug.cost))
 
     def ApplyPenalty(self, n):
         self.gm.applyPenalty(n - 1)
-        document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
+        document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
         prop = self.gm.properties[n-1]
         document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
         document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n].mult.toFixed(2))
@@ -271,9 +279,12 @@ class incremental:
 
     def Update (self):
         self.gm.cycle()
-        document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
+        if (self.endtime - self.gm.time < 10000):
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
+        else:
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
         if self.two_player:
-            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
+            document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
         if self.gm.time >= self.endtime:
             self.EndGame()
 
@@ -287,17 +298,21 @@ class incremental:
 
         document.getElementById("startButtons").style.display = "none"
         document.getElementById("resDiv").style.display = "none"
+        document.getElementById("story").style.display = "none"
         if self.two_player:
             document.getElementById("adPane").style.display = "inline-block"
         document.getElementById("cash").style.display = "inline-block"
         for n in [1,2,3,4,5,6,7,8]:
             document.getElementById("sec" + str(n)).style.display = "inline-block"
         self.inter = window.setInterval(self.Update, 1000)
-        document.getElementById('cash').innerHTML = 'Total Cash: ${}'.format(toForm2(self.gm.currency))
+        if (self.endtime - self.gm.time < 10000):
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
+        else:
+            document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
         if self.two_player:
-            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
+            document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
         if self.two_player:
-            document.getElementById ('advcount') .innerHTML = 'Adversary has {} penalties to apply'.format(self.gm.pen_count)
+            document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
         for n in [1,2,3,4,5,6,7,8]:
             prop = self.gm.properties[n-1]
             if self.two_player:

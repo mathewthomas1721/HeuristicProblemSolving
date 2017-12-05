@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-04 16:24:19
+// Transcrypt'ed from Python, 2017-12-04 18:40:50
 function incremental () {
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2548,6 +2548,7 @@ function incremental () {
 				self.counter = 0;
 				self.time = 0;
 				self.currency = 6.0;
+				self.cum_currency = 0.0;
 				self.pen_count = 0;
 				self.properties = list ([]);
 				self.global_multiplier = 1.0;
@@ -2589,6 +2590,7 @@ function incremental () {
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 					var prop = __iterable0__ [__index0__];
 					self.currency += prop.total_income * self.global_multiplier;
+					self.cum_currency += prop.total_income * self.global_multiplier;
 				}
 			});}
 		});
@@ -2705,7 +2707,7 @@ function incremental () {
 				}
 				document.getElementById ('startButtons').style.display = 'inline-block';
 				document.getElementById ('resDiv').style.display = 'inline-block';
-				document.getElementById ('resDiv').innerHTML = 'Game Over. Player earned ${} in {} seconds.'.format (toForm2 (self.gm.currency), self.endtime);
+				document.getElementById ('resDiv').innerHTML = 'Game Over. Player earned {} KitKats in {} seconds.'.format (toForm2 (self.gm.cum_currency), self.endtime);
 				window.clearInterval (self.inter);
 				window.removeEventListener ('keydown', self.respondKey);
 			});},
@@ -2714,26 +2716,36 @@ function incremental () {
 				var prop = self.gm.properties [n - 1];
 				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
 				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				if (self.endtime - self.gm.time < 10000) {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format (toForm2 (self.gm.currency), self.endtime - self.gm.time);
+				}
+				else {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				}
 				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 				if (self.two_player) {
-					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
+					document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
 				}
 			});},
 			get UpgradeProp () {return __get__ (this, function (self, n) {
 				self.gm.upgrade_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				if (self.endtime - self.gm.time < 10000) {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format (toForm2 (self.gm.currency), self.endtime - self.gm.time);
+				}
+				else {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				}
 				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
 				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 				var ug = prop.get_next_upgrade ();
-				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for ${}. Multipy all {} earnings by {}'.format (ug.py_name, toForm (ug.cost), prop.py_name, ug.mult);
+				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for {} KitKats. Multipy all {} earnings by {}'.format (ug.py_name, toForm (ug.cost), prop.py_name, ug.mult);
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
 				document.getElementById ('UC' + str (n)).innerHTML = 'Upgrade : {} KitKats'.format (toForm (ug.cost));
 			});},
 			get ApplyPenalty () {return __get__ (this, function (self, n) {
 				self.gm.applyPenalty (n - 1);
-				document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
+				document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
 				var prop = self.gm.properties [n - 1];
 				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
 				document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n].mult.toFixed (2));
@@ -2767,9 +2779,14 @@ function incremental () {
 			});},
 			get Update () {return __get__ (this, function (self) {
 				self.gm.cycle ();
-				document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				if (self.endtime - self.gm.time < 10000) {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format (toForm2 (self.gm.currency), self.endtime - self.gm.time);
+				}
+				else {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
+				}
 				if (self.two_player) {
-					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
+					document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
 				}
 				if (self.gm.time >= self.endtime) {
 					self.EndGame ();
@@ -2783,6 +2800,7 @@ function incremental () {
 				}
 				document.getElementById ('startButtons').style.display = 'none';
 				document.getElementById ('resDiv').style.display = 'none';
+				document.getElementById ('story').style.display = 'none';
 				if (self.two_player) {
 					document.getElementById ('adPane').style.display = 'inline-block';
 				}
@@ -2793,12 +2811,17 @@ function incremental () {
 					document.getElementById ('sec' + str (n)).style.display = 'inline-block';
 				}
 				self.inter = window.setInterval (self.Update, 1000);
-				document.getElementById ('cash').innerHTML = 'Total Cash: ${}'.format (toForm2 (self.gm.currency));
-				if (self.two_player) {
-					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
+				if (self.endtime - self.gm.time < 10000) {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format (toForm2 (self.gm.currency), self.endtime - self.gm.time);
+				}
+				else {
+					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
 				}
 				if (self.two_player) {
-					document.getElementById ('advcount').innerHTML = 'Adversary has {} penalties to apply'.format (self.gm.pen_count);
+					document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
+				}
+				if (self.two_player) {
+					document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
 				}
 				var __iterable0__ = list ([1, 2, 3, 4, 5, 6, 7, 8]);
 				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {

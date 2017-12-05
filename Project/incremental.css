@@ -1,6 +1,7 @@
 .cashdisp{
 	display: none;
 	font-weight: bold;
+	text-align:left;
 }
 
 .instructiontext{
@@ -68,6 +69,7 @@
 	height: 300px;
 	display: inline-block;
 	text-align:right;
+	font-weight: bold;
 
 }
 
@@ -78,6 +80,7 @@
     margin: -100px 0 0 -200px;
     top: 50%;
     left: 50%;
+		font-weight: bold;
 }
 
 .resultsDiv{
@@ -86,6 +89,14 @@
 		top:25%;
 		width: 400px;
 		display : none;
+		font-weight: bold;
+}
+
+.storydiv{
+		position:relative;
+
+		display : inline - block;
+		font-weight: bold;
 }
 
 .tooltip {
