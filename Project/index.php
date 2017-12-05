@@ -23,7 +23,7 @@
 <!--    <li><a href="memory">Memory Game</a></li>-->
 <!--    <li><a href="games/empty">Empty Template</a></li>-->
   </ul>
-    <?php include "leftMenuGame.php"; ?>
+    <?php include $base."leftMenuGame.php"; ?>
 </nav>
 <article>
 <div id="intro", class="jumbotron">
