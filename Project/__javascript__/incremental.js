@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-04 18:40:50
+// Transcrypt'ed from Python, 2017-12-04 22:40:52
 function incremental () {
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2491,6 +2491,14 @@ function incremental () {
 				return num.toFixed (0);
 			}
 		};
+		var currencyName = function (n) {
+			if (n == 1) {
+				return 'KitKat';
+			}
+			else {
+				return 'KitKats';
+			}
+		};
 		var Property = __class__ ('Property', [object], {
 			get __init__ () {return __get__ (this, function (self, py_name, base_cost, cost_mult, base_income) {
 				self.py_name = py_name;
@@ -2714,7 +2722,7 @@ function incremental () {
 			get BuyProp () {return __get__ (this, function (self, n) {
 				self.gm.buy_prop (n - 1);
 				var prop = self.gm.properties [n - 1];
-				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
+				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income), currencyName (prop.total_income));
 				document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
 				if (self.endtime - self.gm.time < 10000) {
 					document.getElementById ('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format (toForm2 (self.gm.currency), self.endtime - self.gm.time);
@@ -2722,7 +2730,6 @@ function incremental () {
 				else {
 					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
 				}
-				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
 				if (self.two_player) {
 					document.getElementById ('advcount').innerHTML = 'Available Penalties : {}'.format (self.gm.pen_count);
 				}
@@ -2736,8 +2743,8 @@ function incremental () {
 				else {
 					document.getElementById ('cash').innerHTML = 'Total KitKats: {}'.format (toForm2 (self.gm.currency));
 				}
-				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
-				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
+				document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income), currencyName (prop.total_income));
+				document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} {} per second'.format (prop.py_name, toForm2 (prop.income), currencyName (prop.income));
 				var ug = prop.get_next_upgrade ();
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Purchase "{}" for {} KitKats. Multipy all {} earnings by {}'.format (ug.py_name, toForm (ug.cost), prop.py_name, ug.mult);
 				document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
@@ -2830,9 +2837,9 @@ function incremental () {
 					if (self.two_player) {
 						document.getElementById ('tta' + str (n)).innerHTML = 'Increase cost of {} by a factor of {}'.format (prop.py_name, self.gm.penalties [n - 1].mult.toFixed (2));
 					}
-					document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income));
+					document.getElementById ('prop' + str (n)).innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.py_name, toForm2 (prop.total_income), currencyName (prop.total_income));
 					document.getElementById ('PC' + str (n)).innerHTML = 'Cost: {} KitKats'.format (toForm (prop.cost));
-					document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} KitKats per second'.format (prop.py_name, toForm2 (prop.income));
+					document.getElementById ('tt' + str (n)).innerHTML = 'Each {} algorithm earns {} {} per second'.format (prop.py_name, toForm2 (prop.income), currencyName (prop.income));
 					var ug = prop.get_next_upgrade ();
 					document.getElementById ('ttu' + str (n)).innerHTML = 'Multipy all {} earnings by {}'.format (prop.py_name, ug.mult);
 					document.getElementById ('UC' + str (n)).innerHTML = 'Upgrade : {} KitKats'.format (toForm (ug.cost));
@@ -2848,6 +2855,7 @@ function incremental () {
 			__all__.Upgrade = Upgrade;
 			__all__.base_mult = base_mult;
 			__all__.base_pen = base_pen;
+			__all__.currencyName = currencyName;
 			__all__.game = game;
 			__all__.incremental = incremental;
 			__all__.toForm = toForm;

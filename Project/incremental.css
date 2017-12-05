@@ -74,26 +74,27 @@
 }
 
 .testdiv{
-	position: absolute;
+		position: relative;
     height: 200px;
     width: 400px;
-    margin: -100px 0 0 -200px;
+    margin: 5% 0 0 -10%;
     top: 50%;
     left: 50%;
 		font-weight: bold;
 }
 
 .resultsDiv{
-		position:absolute;
-		left:39%;
-		top:25%;
-		width: 400px;
-		display : none;
-		font-weight: bold;
+	position: relative;
+	height: 200px;
+	width: 400px;
+	margin: 5% 0 0 -10%;
+	top: 80%;
+	left: 50%;
+	display : none;
+	font-weight: bold;
 }
 
 .storydiv{
-		position:relative;
 
 		display : inline - block;
 		font-weight: bold;
