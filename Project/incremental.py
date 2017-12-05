@@ -17,6 +17,12 @@ def toForm2(num):
     else:
         return num.toFixed(0)
 
+def currencyName(n):
+    if n == 1:
+        return 'KitKat'
+    else:
+        return 'KitKats'
+
 class Property:
     def __init__(self,name, base_cost, cost_mult, base_income):
         self.name = name
@@ -224,13 +230,12 @@ class incremental:
     def BuyProp(self, n):
         self.gm.buy_prop(n - 1)
         prop = self.gm.properties[n-1]
-        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
         document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
         if (self.endtime - self.gm.time < 10000):
             document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
         else:
             document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
-        document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
         if self.two_player:
             document.getElementById ('advcount') .innerHTML = 'Available Penalties : {}'.format(self.gm.pen_count)
 
@@ -243,8 +248,8 @@ class incremental:
             document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
         else:
             document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
-        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
-        document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
+        document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} {} per second".format(prop.name, toForm2(prop.income), currencyName(prop.income))
         ug = prop.get_next_upgrade()
         document.getElementById('ttu' + str(n)).innerHTML = 'Purchase "{}" for {} KitKats. Multipy all {} earnings by {}'.format(ug.name, toForm(ug.cost), prop.name, ug.mult)
         document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} earnings by {}'.format(prop.name, ug.mult)
@@ -317,9 +322,9 @@ class incremental:
             prop = self.gm.properties[n-1]
             if self.two_player:
                 document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n-1].mult.toFixed(2))
-            document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} KitKats per second.".format (prop.count, prop.name, toForm2(prop.total_income))
+            document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
             document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
-            document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} KitKats per second".format(prop.name, toForm2(prop.income))
+            document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} {} per second".format(prop.name, toForm2(prop.income), currencyName(prop.income))
             ug = prop.get_next_upgrade()
             document.getElementById('ttu' + str(n)).innerHTML = 'Multipy all {} earnings by {}'.format(prop.name, ug.mult)
             document.getElementById('UC' + str(n)).innerHTML = 'Upgrade : {} KitKats'.format(toForm(ug.cost))
