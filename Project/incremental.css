@@ -84,12 +84,14 @@
 }
 
 .resultsDiv{
-		position:absolute;
-		left:39%;
-		top:25%;
-		width: 400px;
-		display : none;
-		font-weight: bold;
+	position: relative;
+	height: 200px;
+	width: 400px;
+	margin: 5% 0 0 -10%;
+	top: 80%;
+	left: 50%;
+	display : none;
+	font-weight: bold;
 }
 
 .storydiv{
