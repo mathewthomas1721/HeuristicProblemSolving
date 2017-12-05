@@ -1,0 +1,126 @@
+.cashdisp{
+	display: none;
+	font-weight: bold;
+	text-align:left;
+}
+
+.instructiontext{
+	width: 365px;
+	height: 300px;
+	float: left;
+	font-weight: bold;
+	text-align: left;
+	display: none;
+	font-size: 0.98em;
+}
+.section {
+	width: 365px;
+	height: 300px;
+	float: left;
+	font-weight: bold;
+	display: none;
+	text-align: center;
+	font-size: 0.98em;
+}
+
+.sectionAd {
+
+	width: 12%;
+	float: left;
+	display: none;
+
+}
+
+.sectionAd img {
+	align:center
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+.buttonsize{
+
+    height:35px;
+    width:150px;
+		font-weight: bold;
+
+}
+
+.buttonalign{
+	width: 8%;
+	height: 150px;
+	float: left;
+	display: inline-block;
+	align: center;
+
+}
+.buttontextalign{
+	width: 8%;
+	height: 150px;
+	float: center;
+	display: inline-block;
+	align: center;
+
+}
+
+.buttontextdesc{
+	width: 80%;
+	height: 300px;
+	display: inline-block;
+	text-align:right;
+	font-weight: bold;
+
+}
+
+.testdiv{
+	position: absolute;
+    height: 200px;
+    width: 400px;
+    margin: -100px 0 0 -200px;
+    top: 50%;
+    left: 50%;
+		font-weight: bold;
+}
+
+.resultsDiv{
+		position:absolute;
+		left:39%;
+		top:25%;
+		width: 400px;
+		display : none;
+		font-weight: bold;
+}
+
+.storydiv{
+		position:relative;
+
+		display : inline - block;
+		font-weight: bold;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: gray;
+    color: #fff;
+		width: 120px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
