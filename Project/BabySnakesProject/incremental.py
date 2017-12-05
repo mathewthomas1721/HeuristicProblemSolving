@@ -6,8 +6,8 @@ base_mult = 1.25
 #This is the standard cost increase multiplier for a two player game. Increase/decrease this to tilt the balance of the game towards the adversary/player
 base_pen = 1.5
 
-#Put currency amounts in desired format. Amounts and costs are stored as floating point numbers, but we want to 
-#   display them as integers. For costs, we always round up, so that the property is always able to be purchased when 
+#Put currency amounts in desired format. Amounts and costs are stored as floating point numbers, but we want to
+#   display them as integers. For costs, we always round up, so that the property is always able to be purchased when
 #   it appears that the player has enough currency. For values larger than 1,000,000, we display in scientific notation
 #Params:
 #   num : floating point number to put in proper format
@@ -22,7 +22,7 @@ def toForm(num):
         else:
             return round_num
 
-#Put currency amounts in desired format. Amounts and costs are stored as floating point numbers, but we want to 
+#Put currency amounts in desired format. Amounts and costs are stored as floating point numbers, but we want to
 #   display them as integers.  This function uses standard rounding. For values larger than 1,000,000, we display in scientific notation.
 #Params:
 #   num : floating point number to put in proper format
@@ -127,12 +127,12 @@ class Game:
     #           (name, base_cost, cost_mult, base_income) as specified above
     #   upgrades: A list of tuples containing info for the upgrades to be available
     #           (name, prop, cost, mult)
-    #           prop : index of property being upgraded. Other fields are as defined above            
+    #           prop : index of property being upgraded. Other fields are as defined above
     def __init__(self, props, upgrades):
         self.counter = 0 #counter for adversary's time-based earning of penalties
         self.time = 0   #time elapse in game in seconds
         self.currency = 6.0 #Initial currency for the player
-        self.cum_currency = 0.0 #Gross currency earned by the player in this game 
+        self.cum_currency = 0.0 #Gross currency earned by the player in this game
         self.pen_count = 0 #Number of penalties available to the adversary (if two player game)
         self.properties = []
         self.global_multiplier = 1.0 # not used in this version. Kept for possible use in new upgrades/penalties
@@ -168,7 +168,7 @@ class Game:
             return True
         return False
 
-    #One game cycle. Called every second. 
+    #One game cycle. Called every second.
     def cycle(self):
         self.counter += 1 #one timestep
         self.time += 1
@@ -184,7 +184,7 @@ class Two_Player_Game(Game):
     #           (name, base_cost, cost_mult, base_income) as specified above
     #   upgrades: A list of tuples containing info for the upgrades to be available
     #           (name, prop, cost, mult)
-    #           prop : index of property being upgraded. Other fields are as defined above   
+    #           prop : index of property being upgraded. Other fields are as defined above
     #   penalties : A list of tuples containung info for penalties available to the adversary. Format as above
     def __init__(self, props, upgrades, penalties):
         Game.__init__(self, props, upgrades) #Call superclass constructor
@@ -202,11 +202,11 @@ class Two_Player_Game(Game):
     #   prop_to_buy : index of property the player wants to buy
     def buy_prop(self, prop_to_buy):
         succeed = Game.buy_prop(self, prop_to_buy) #Superclass buy
-        if succeed: #If the purchase goes through, 
+        if succeed: #If the purchase goes through,
             self.counter = 0.  #Reset counter for next penalty
             self.pen_count += 1.    #and increment the number of penalties the adversary has.
 
-    #One game cycle. Called every second. 
+    #One game cycle. Called every second.
     def cycle(self):
         Game.cycle(self)
         if self.counter >= 20: #If player has gone 20 seconds without a purchase,
@@ -233,7 +233,7 @@ class Two_Player_Game(Game):
             if pen.type == 0:
                 self.properties[pen.prop].cost *= pen.mult #apply cost increase multiplier
             #used for penalties witha duration that affected global multiplier. Not used in final version
-            #elif pen.type == 1: #used for 
+            #elif pen.type == 1: #used for
             #    self.active_penalties.append(pen)
             #    self.global_multiplier *= pen.mult
 
@@ -343,7 +343,7 @@ class incremental:
         prop = self.gm.properties[n-1]  #get property object
 
         #Update property text with new count and cost of property
-        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. <br>Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
         document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
 
         #Since player may have spent currency, update text that tracks current currency
@@ -371,7 +371,7 @@ class incremental:
             document.getElementById('cash').innerHTML = 'Total KitKats: {}<br>Remaining Time : {}'.format(toForm2(self.gm.currency), self.endtime - self.gm.time)
         else:
             document.getElementById('cash').innerHTML = 'Total KitKats: {}'.format(toForm2(self.gm.currency))
-        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
+        document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. <br>Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
 
         #Update tooltip giving per-property income info
         document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} {} per second".format(prop.name, toForm2(prop.income), currencyName(prop.income))
@@ -475,8 +475,8 @@ class incremental:
             if self.two_player:
                 document.getElementById ('tta'+str(n)) .innerHTML = 'Increase cost of {} by a factor of {}'.format(prop.name, self.gm.penalties[n-1].mult.toFixed(2))
 
-            #Initialize all property, upgrade, cost, and tooltip text    
-            document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
+            #Initialize all property, upgrade, cost, and tooltip text
+            document.getElementById ('prop'+ str(n)) .innerHTML = "You've developed {} {} algorithms. <br>Earning {} {} per second.".format (prop.count, prop.name, toForm2(prop.total_income), currencyName(prop.total_income))
             document.getElementById ('PC'+ str(n)) .innerHTML = 'Cost: {} KitKats'.format (toForm(prop.cost))
             document.getElementById('tt' + str(n)).innerHTML = "Each {} algorithm earns {} {} per second".format(prop.name, toForm2(prop.income), currencyName(prop.income))
             ug = prop.get_next_upgrade() #Get upgrade object
