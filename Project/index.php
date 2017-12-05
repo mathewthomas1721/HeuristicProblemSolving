@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <link rel="stylesheet" type="text/css" href="incremental.css">
 <h1>The Enterpren<i>Heurist</i> Game</h1>
 
@@ -260,7 +261,7 @@
   Time: <input type="number" name="time" value="0"> <br><br>Enter Game Duration<br> Enter zero for an infinite game<br>
 </form>
 </div>
-<div class = "storydiv" id >
+<div class = "storydiv" id="story" >
   <p>
   The year is 2018. Flesh-eating Baby Snakes have devoured all non-heurists, society has collapsed, and the economy runs entirely on KitKat bars. With his seemingly endless stash of candy, Lord Shasha rules the business world. The only way to improve your station is to sell him algorithms that solve his problems. Get to work and become the greatest omniheurist in the land. Earn as many KitKats as you can, but watch out, Lord Shasha has been known to change his problems to make them more challenging.
   <p>
@@ -268,7 +269,7 @@
   <p>
   In single player mode, you play as the entreprenheurist and aim to earn as many KitKats as possible by developing and improving algorithms for various games. As a programmer requires sugary fuel to work, it costs some of your KitKats to develop algorithms. Once developed, they will provide you a steady stream of income. Any improvements on your algorithm will cost more than the one before it. Use the mouse to choose your algorithms and upgrades.
   <p>
-  In two player mode, the first player plays as the entreprenheurist and uses the mouse to develop and improve algorithms with the goal of earning as many KitKats as possible. The second player acts as Lord Shasha and adds new constraints to make an efficient algorithm harder to develop, and therefore more costly. The goal of the adversary is to apply these penalties in order to minimize the amount of KitKats the the entreprenheurist can earn. The adversary earns a penalty each time the entreprenheurist develops an algorithm and also when the player has been inactive for 20 seconds. The adversary applies these penalties using the number keys or mouse click.
+  In two player mode, the first player plays as the entreprenheurist and uses the mouse to develop and improve algorithms with the goal of earning as many KitKats as possible. The second player acts as Lord Shasha and adds new constraints to make an efficient algorithm harder to develop, and therefore more costly. The goal of the adversary is to apply these penalties in order to minimize the amount of KitKats the the entreprenheurist can earn. The adversary earns a penalty each time the entreprenheurist develops an algorithm and also when the player has been inactive for 20 seconds. The adversary applies these penalties using the number keys or mouse clicks.
 </div>
 <div class = "instructiontext" id = "ins">
   Key Mappings For Adversary :<br>
